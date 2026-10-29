@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://lh3.googleusercontent.com https://drive.google.com; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Casa Zavala · Café de Veracruz</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#1e4e34">
+<meta property="og:title" content="Casa Zavala · Café de origen">
+<meta property="og:image" content="logo-512.webp">
+<meta name="description" content="Café artesanal de Veracruz en grano y molido. Entregas en Monterrey y área metropolitana.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cafe:#2b1d15; --cafe2:#4a3426; --crema:#f3ebe0; --papel:#fffaf3; --verde:#1e4e34; --verde2:#2f6b48;
+  --ambar:#c89a3a; --rojo:#b2252c; --gris:#6f655d; --linea:#e7dccd; --radio:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--crema);color:var(--cafe);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}
+a{color:inherit}
+.dev{background:var(--rojo);color:#fff;text-align:center;font-size:12px;padding:6px 12px;letter-spacing:.02em}
+header{position:sticky;top:0;z-index:20;background:var(--verde);color:var(--crema);border-bottom:3px solid var(--ambar)}
+.barra{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px}
+.marca{font-family:Fraunces,serif;font-size:22px;font-weight:700;letter-spacing:.01em;flex:1;display:flex;align-items:center;gap:10px}
+.marca img{width:46px;height:46px;border-radius:50%;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+.marca small{display:block;font-family:Inter;font-weight:400;font-size:11px;opacity:.75;letter-spacing:.08em;text-transform:uppercase}
+.btn-wa{display:none;color:var(--crema);text-decoration:none;font-size:13px;border:1px solid rgba(255,255,255,.3);padding:8px 12px;border-radius:999px}
+.btn-carrito{position:relative;background:var(--rojo);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer}
+.btn-carrito b{background:#fff;color:var(--cafe);border-radius:999px;padding:1px 8px;margin-left:6px;font-size:13px}
+.hero{max-width:1120px;margin:0 auto;padding:28px 16px 8px;display:flex;align-items:center;gap:24px}
+.hero-logo{width:132px;height:132px;flex:none;border-radius:50%;box-shadow:0 6px 24px rgba(30,78,52,.25)}
+@media (max-width:560px){.hero{flex-direction:column;align-items:flex-start;gap:14px}.hero-logo{width:96px;height:96px}}
+.hero h1{font-family:Fraunces,serif;font-size:clamp(28px,6vw,44px);line-height:1.05;margin:0 0 8px}
+.hero p{margin:0;color:var(--gris);max-width:620px}
+.link-wa{color:var(--verde);font-weight:600}
+.envios{text-decoration:none;display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:#fff;border:1px solid var(--ambar);color:var(--verde);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600}
+.envios:before{content:'';width:8px;height:8px;border-radius:50%;background:var(--ambar)}
+.filtros{max-width:1120px;margin:0 auto;padding:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.grupo{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.grupo>span{font-size:12px;color:var(--gris);margin-right:2px}
+.chip{border:1px solid var(--linea);background:var(--papel);border-radius:999px;padding:7px 13px;font-size:14px;cursor:pointer;color:var(--cafe)}
+.chip[aria-pressed=true]{background:var(--verde);color:var(--crema);border-color:var(--verde)}
+.sep{width:1px;height:24px;background:var(--linea);margin:0 4px}
+main{max-width:1120px;margin:0 auto;padding:0 16px 120px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden;display:flex;flex-direction:column}
+.foto{aspect-ratio:1/1;background:#efe4d4;position:relative}
+.foto .sello{position:static;width:64px;height:64px;opacity:.85;margin-bottom:8px}
+.foto>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.foto .sin{position:absolute;inset:0;display:grid;place-items:center;color:var(--cafe2);font-family:Fraunces,serif;font-size:20px;text-align:center;padding:16px}
+.badge{position:absolute;z-index:1;top:10px;right:10px;font-size:12px;font-weight:600;padding:4px 9px;border-radius:999px;background:#fff;color:var(--cafe)}
+.badge.agotado{background:var(--rojo);color:#fff}.badge.ultimas{background:var(--ambar);color:#fff}
+.info{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.info h3{margin:0;font-family:Fraunces,serif;font-size:19px;line-height:1.15}
+.meta{font-size:12px;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+.desc{font-size:13.5px;color:#5b5048;margin:0;flex:1}
+.pie{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.precio{font-weight:600;font-size:18px}
+.agregar{background:var(--verde);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:600;cursor:pointer}
+.agregar:disabled{background:#b9ad9f;cursor:not-allowed}
+.vacio,.cargando{padding:40px 0;text-align:center;color:var(--gris)}
+/* Carrito */
+.velo{position:fixed;inset:0;background:rgba(20,12,8,.45);opacity:0;pointer-events:none;transition:.2s;z-index:30}
+.velo.abierto{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;height:100%;width:min(440px,100%);background:var(--papel);z-index:31;transform:translateX(100%);transition:.25s;display:flex;flex-direction:column}
+.panel.abierto{transform:none}
+.panel-cab{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--linea)}
+.panel-cab h2{margin:0;font-family:Fraunces,serif;font-size:22px}
+.cerrar{background:none;border:0;font-size:26px;cursor:pointer;color:var(--cafe);line-height:1}
+.panel-cuerpo{flex:1;overflow:auto;padding:12px 16px}
+.item{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--linea)}
+.item img,.item .mini{width:56px;height:56px;border-radius:10px;object-fit:cover;background:#efe4d4}
+.item h4{margin:0;font-size:14px}.item p{margin:2px 0 0;font-size:12.5px;color:var(--gris)}
+.cant{display:flex;align-items:center;gap:6px}
+.cant button{width:30px;height:30px;border-radius:8px;border:1px solid var(--linea);background:#fff;cursor:pointer;font-size:16px}
+.quitar{background:none;border:0;color:var(--rojo);font-size:12px;cursor:pointer;padding:4px 0 0}
+.panel-pie{border-top:1px solid var(--linea);padding:14px 16px;background:#fff}
+.total{display:flex;justify-content:space-between;font-weight:600;font-size:17px;margin-bottom:4px}
+.nota{font-size:12px;color:var(--gris);margin:0 0 10px}
+.principal{width:100%;background:var(--verde);color:#fff;border:0;border-radius:12px;padding:13px;font-weight:600;font-size:16px;cursor:pointer}
+.principal:disabled{opacity:.6;cursor:wait}
+.secundario{width:100%;background:none;border:1px solid var(--linea);border-radius:12px;padding:11px;margin-top:8px;cursor:pointer;color:var(--cafe)}
+form{display:grid;gap:10px}
+label{font-size:13px;font-weight:500;display:grid;gap:4px}
+input,select,textarea{border:1px solid var(--linea);border-radius:10px;padding:10px 12px;background:#fff;color:var(--cafe);width:100%}
+textarea{min-height:64px;resize:vertical}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.error{background:#fbe3df;color:var(--rojo);border-radius:10px;padding:10px 12px;font-size:14px}
+.ok h3{font-family:Fraunces,serif;font-size:22px;margin:4px 0 8px}
+.ok table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+.ok td{padding:6px 0;border-bottom:1px solid var(--linea)}
+.ok td:last-child{text-align:right}
+.boton-link{display:block;text-align:center;text-decoration:none;border-radius:12px;padding:13px;font-weight:600;margin-top:8px}
+.pagar{background:var(--ambar);color:#fff}.wa{background:#1f8f4e;color:#fff}
+footer{text-align:center;color:var(--gris);font-size:13px;padding:24px 16px}
+@media (min-width:720px){.btn-wa{display:inline-block}}
+@media (max-width:420px){.grid{grid-template-columns:1fr 1fr;gap:10px}.info{padding:10px}.info h3{font-size:16px}.desc{display:none}.agregar{padding:8px 10px;font-size:14px}.precio{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="dev" id="aviso-dev">MODO DESARROLLO · los pedidos de esta página van a la hoja de prueba (DEV), no son reales</div>
+<header>
+  <div class="barra">
+    <div class="marca"><img src="logo.webp" alt="" width="46" height="46"><div>Casa Zavala<small>Café de origen · ☕ "Servido con orgullo" ☕</small></div></div>
+    <a class="btn-wa" id="link-wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+    <button class="btn-carrito" id="abrir-carrito" aria-label="Abrir carrito">Carrito <b id="num-carrito">0</b></button>
+  </div>
+</header>
+
+<section class="hero">
+  <img class="hero-logo" src="logo.webp" alt="Casa Zavala · Café de origen · Est. 2026" width="132" height="132">
+  <div>
+  <h1>Selecciona tu pedido:</h1>
+  <p>En grano o molido, tueste americano o europeo. Elige, arma tu carrito. Envíos locales en Monterrey y área metropolitana. "Si tienes dudas, <a class="link-wa" id="dudas-wa" href="#" target="_blank" rel="noopener">mándanos un WhatsApp</a>".</p>
+  <a class="envios" id="cotizar" href="#" target="_blank" rel="noopener">Contamos con envíos nacionales. Solicita tu cotización de envío sin compromiso.</a>
+  </div>
+</section>
+
+<nav class="filtros" id="filtros" aria-label="Filtros"></nav>
+<main>
+  <div id="lista" class="grid"><div class="cargando">Cargando catálogo…</div></div>
+</main>
+<footer>Casa Zavala · Entregas en Monterrey y área metropolitana · Envíos nacionales con cotización sin compromiso · Pagos por transferencia, tarjeta o contra entrega</footer>
+
+<div class="velo" id="velo"></div>
+<aside class="panel" id="panel" aria-label="Carrito" aria-hidden="true">
+  <div class="panel-cab"><h2 id="titulo-panel">Tu carrito</h2><button class="cerrar" id="cerrar" aria-label="Cerrar">×</button></div>
+  <div class="panel-cuerpo" id="cuerpo"></div>
+  <div class="panel-pie" id="pie"></div>
+</aside>
+
+<script>
+/* ===== Configuración ===== */
+const API = 'https://script.google.com/macros/s/AKfycbwYEuwQYqOez2H128KDTpl2fyjH3N41GyfsT4neiIFlyiMp72CXTfsVKnjYQM9kENvT/exec';
+const MODO_DEV = false;   // en producción: false (quita la franja roja)
+const MUNICIPIOS = ['Monterrey','San Pedro','San Nicolás','Apodaca','Guadalupe','Escobedo','Santa Catarina','Santiago','Juárez','García','Otro'];
+const MIN_CACHE = 5;
+
+/* ===== Utilidades ===== */
+const $ = s => document.querySelector(s);
+const pesos = n => '$' + Number(n || 0).toLocaleString('es-MX', {maximumFractionDigits: 0});
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const leer = (k, def) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? def; } catch (e) { return def; } };
+const nombreCorto = p => (p.categoria === 'Bombones' ? p.producto : `${p.presentacion} ${p.tamano}`) + (p.tueste ? ` · ${p.tueste}` : '');
+
+/* ===== Estado ===== */
+let catalogo = [];
+let whatsapp = 'https://wa.me/528115088658';
+let carrito = leer('cz_carrito', {});   // {sku: cantidad}
+const filtro = {categoria: 'Café', proveedor: 'Todas', tueste: 'Todos', presentacion: 'Todos', tamano: 'Todos', origen: 'Todos'};
+if (!MODO_DEV) $('#aviso-dev').remove();
+
+/* ===== Catálogo ===== */
+async function cargarCatalogo() {
+  const enCache = leer('cz_catalogo', null);
+  if (enCache && Date.now() - enCache.t < MIN_CACHE * 60000) { usarCatalogo(enCache.d); refrescar(); return; }
+  await refrescar(true);
+}
+async function refrescar(mostrarError) {
+  try {
+    const r = await fetch(API + '?accion=catalogo', {redirect: 'follow'});
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || 'Error');
+    guardar('cz_catalogo', {t: Date.now(), d});
+    usarCatalogo(d);
+  } catch (e) {
+    if (mostrarError) $('#lista').innerHTML = '<div class="vacio">No pudimos cargar el catálogo. Revisa tu conexión o escríbenos por WhatsApp.</div>';
+  }
+}
+function usarCatalogo(d) {
+  catalogo = d.productos || [];
+  if (d.whatsapp) whatsapp = d.whatsapp;
+  $('#link-wa').href = whatsapp;
+  $('#dudas-wa').href = whatsapp;
+  $('#cotizar').href = whatsapp + (whatsapp.indexOf('?') < 0 ? '?' : '&') + 'text=' +
+    encodeURIComponent('Hola, quiero cotizar un envío nacional de café. Mi código postal es: ');
+  // Quita del carrito lo que ya no existe
+  Object.keys(carrito).forEach(s => { if (!catalogo.find(p => p.sku === s)) delete carrito[s]; });
+  guardar('cz_carrito', carrito);
+  pintarFiltros(); pintarLista(); pintarContador();
+}
+
+/* ===== Filtros ===== */
+function valores(campo) { return [...new Set(catalogo.filter(p => campo === 'categoria' || p.categoria === filtro.categoria).map(p => p[campo]).filter(Boolean))]; }
+const ETIQUETA = {Grano: 'En grano'};
+function grupo(titulo, campo, opciones, todos, siempre) {
+  if (opciones.length < 2 && !siempre) return '';
+  const lista = (todos ? [todos] : []).concat(opciones);
+  return `<div class="grupo"><span>${titulo}</span>${lista.map(o =>
+    `<button class="chip" data-campo="${campo}" data-valor="${esc(o)}" aria-pressed="${filtro[campo] === o}">${esc(ETIQUETA[o] || o)}</button>`).join('')}</div>`;
+}
+// Tamaño de menor a mayor leyendo el número (250 g, 500 g, 1 kg, 2 kg…), aunque lleguen tamaños nuevos
+const gramos = t => { const m = String(t).match(/([\d.]+)\s*(kg|g)/i); return m ? Number(m[1]) * (/kg/i.test(m[2]) ? 1000 : 1) : 1e9; };
+const enOrden = (lista, orden) => lista.sort((a, b) => (orden.indexOf(a) < 0 ? 99 : orden.indexOf(a)) - (orden.indexOf(b) < 0 ? 99 : orden.indexOf(b)) || a.localeCompare(b));
+function pintarFiltros() {
+  const cafe = filtro.categoria === 'Café';
+  $('#filtros').innerHTML = [
+    grupo('', 'categoria', valores('categoria'), '', true),
+    '<div class="sep"></div>' + grupo('Marca', 'proveedor', valores('proveedor').sort((a, b) => a.localeCompare(b)), 'Todas', true),
+    cafe ? grupo('Tueste', 'tueste', enOrden(valores('tueste'), ['Americano', 'Europeo']), 'Todos') : '',
+    cafe ? grupo('Molienda', 'presentacion', enOrden(valores('presentacion'), ['Molido', 'Grano']), 'Todos') : '',
+    cafe ? grupo('Tamaño', 'tamano', valores('tamano').sort((a, b) => gramos(a) - gramos(b)), 'Todos') : '',
+    grupo('Origen', 'origen', valores('origen').sort((a, b) => a.localeCompare(b)), 'Todos')
+  ].join('');
+}
+$('#filtros').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  filtro[b.dataset.campo] = b.dataset.valor;
+  if (b.dataset.campo === 'categoria') Object.assign(filtro, {proveedor: 'Todas', tamano: 'Todos', presentacion: 'Todos', tueste: 'Todos', origen: 'Todos'});
+  pintarFiltros(); pintarLista();
+});
+
+/* ===== Lista de productos ===== */
+function pintarLista() {
+  const ok = (campo) => p => filtro[campo] === 'Todos' || filtro[campo] === 'Todas' || p[campo] === filtro[campo];
+  const lista = catalogo.filter(p => p.categoria === filtro.categoria).filter(ok('proveedor')).filter(ok('tueste')).filter(ok('presentacion')).filter(ok('tamano')).filter(ok('origen'))
+    .sort((a, b) => a.proveedor.localeCompare(b.proveedor) || gramos(a.tamano) - gramos(b.tamano));
+  if (!lista.length) { $('#lista').innerHTML = '<div class="vacio">No hay productos con esos filtros.</div>'; return; }
+  $('#lista').innerHTML = lista.map(p => {
+    const badge = !p.hay ? '<span class="badge agotado">Agotado</span>' : p.ultimas ? '<span class="badge ultimas">Últimas piezas</span>' : '';
+    const titulo = p.categoria === 'Bombones' ? p.producto : `${p.presentacion} ${p.tamano}`;
+    return `<article class="card">
+      <div class="foto"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(titulo)}</div></div>${p.imagen ? `<img loading="lazy" src="${esc(p.imagen)}" alt="${esc(p.producto + ' ' + p.tueste)}" onerror="this.remove()">` : ''}${badge}</div>
+      <div class="info">
+        <div class="meta">${esc([p.proveedor, p.tueste, p.origen].filter(Boolean).join(' · '))}</div>
+        <h3>${esc(titulo)}</h3>
+        <p class="desc">${esc(p.descripcion)}</p>
+        <div class="pie"><span class="precio">${pesos(p.precio)}</span>
+          <button class="agregar" data-sku="${esc(p.sku)}" ${p.hay ? '' : 'disabled'}>${p.hay ? (carrito[p.sku] ? `En carrito (${carrito[p.sku]})` : 'Agregar') : 'Agotado'}</button></div>
+      </div></article>`;
+  }).join('');
+}
+$('#lista').addEventListener('click', e => {
+  const b = e.target.closest('.agregar'); if (!b || b.disabled) return;
+  cambiar(b.dataset.sku, +1);
+  b.textContent = `En carrito (${carrito[b.dataset.sku]})`;
+});
+
+/* ===== Carrito ===== */
+function cambiar(sku, delta) {
+  carrito[sku] = Math.max(0, Math.min(10, (carrito[sku] || 0) + delta));
+  if (!carrito[sku]) delete carrito[sku];
+  guardar('cz_carrito', carrito); pintarContador();
+  if ($('#panel').classList.contains('abierto') && vista === 'carrito') pintarCarrito();
+}
+function lineas() { return Object.entries(carrito).map(([sku, c]) => ({p: catalogo.find(x => x.sku === sku), c})).filter(l => l.p); }
+function pintarContador() { $('#num-carrito').textContent = Object.values(carrito).reduce((a, b) => a + b, 0); }
+let vista = 'carrito';
+function abrir(v) { vista = v || 'carrito'; $('#panel').classList.add('abierto'); $('#velo').classList.add('abierto'); $('#panel').setAttribute('aria-hidden', 'false'); pintarPanel(); }
+function cerrar() { $('#panel').classList.remove('abierto'); $('#velo').classList.remove('abierto'); $('#panel').setAttribute('aria-hidden', 'true'); pintarLista(); }
+$('#abrir-carrito').onclick = () => abrir('carrito');
+$('#cerrar').onclick = cerrar; $('#velo').onclick = cerrar;
+function pintarPanel() { vista === 'carrito' ? pintarCarrito() : vista === 'datos' ? pintarDatos() : null; }
+
+function pintarCarrito() {
+  $('#titulo-panel').textContent = 'Tu carrito';
+  const ls = lineas();
+  if (!ls.length) { $('#cuerpo').innerHTML = '<div class="vacio">Tu carrito está vacío.</div>'; $('#pie').innerHTML = '<button class="secundario" onclick="cerrar()">Ver productos</button>'; return; }
+  $('#cuerpo').innerHTML = ls.map(({p, c}) => `<div class="item">
+      ${p.imagen ? `<img src="${esc(p.imagen)}" alt="">` : '<div class="mini"></div>'}
+      <div><h4>${esc(nombreCorto(p))}</h4><p>${pesos(p.precio)} c/u${p.hay ? '' : ' · <b style="color:var(--rojo)">agotado</b>'}</p>
+        <button class="quitar" data-sku="${esc(p.sku)}" data-d="-99">Quitar</button></div>
+      <div class="cant"><button data-sku="${esc(p.sku)}" data-d="-1" aria-label="Menos">−</button><b>${c}</b><button data-sku="${esc(p.sku)}" data-d="1" aria-label="Más">+</button></div>
+    </div>`).join('');
+  const total = ls.reduce((a, {p, c}) => a + p.precio * c, 0);
+  $('#pie').innerHTML = `<div class="total"><span>Subtotal</span><span>${pesos(total)}</span></div>
+    <p class="nota">Precio normal. Si tienes código de descuento lo pones en el siguiente paso; el total final te lo confirmamos al registrar el pedido.</p>
+    <button class="principal" id="ir-datos">Continuar</button>`;
+  $('#ir-datos').onclick = () => { vista = 'datos'; pintarDatos(); };
+}
+$('#cuerpo').addEventListener('click', e => {
+  const b = e.target.closest('[data-d]'); if (!b) return;
+  cambiar(b.dataset.sku, Number(b.dataset.d));
+});
+
+/* ===== Datos de entrega ===== */
+function pintarDatos(error) {
+  $('#titulo-panel').textContent = 'Datos de entrega';
+  const d = leer('cz_datos', {});
+  $('#cuerpo').innerHTML = `${error ? `<div class="error">${esc(error)}</div>` : ''}
+  <form id="forma" novalidate>
+    <label>Nombre completo<input name="nombre" required autocomplete="name" value="${esc(d.nombre)}"></label>
+    <label>WhatsApp (10 dígitos)<input name="telefono" required inputmode="tel" autocomplete="tel" value="${esc(d.telefono)}"></label>
+    <label>Dirección (calle, número y colonia)<input name="direccion" required autocomplete="street-address" value="${esc(d.direccion)}"></label>
+    <div class="dos">
+      <label>Código postal<input name="cp" required inputmode="numeric" maxlength="5" autocomplete="postal-code" value="${esc(d.cp)}"></label>
+      <label>Municipio<select name="municipio" required>${['', ...MUNICIPIOS].map(m => `<option ${d.municipio === m ? 'selected' : ''} value="${esc(m)}">${m || 'Elige…'}</option>`).join('')}</select></label>
+    </div>
+    <label>¿Para quién es?<select name="tipo"><option value="B2C">Para mi casa u oficina</option><option value="B2B" ${d.tipo === 'B2B' ? 'selected' : ''}>Para mi negocio (cafetería, restaurante)</option></select></label>
+    <label>Código de descuento (opcional)<input name="codigo" autocomplete="off" value="${esc(d.codigo)}"></label>
+    <p class="nota" style="margin:-2px 0 0">¿Fuera de Monterrey y área metropolitana? Elige «Otro» en municipio: envíos nacionales disponibles bajo previa cotización de envío; te cotizamos por WhatsApp antes de cobrar.</p>
+    <label>Comentarios (opcional)<textarea name="notas" maxlength="300">${esc(d.notas)}</textarea></label>
+    <div class="trampa" aria-hidden="true"><label>Sitio web<input name="website" tabindex="-1" autocomplete="off"></label></div>
+  </form>`;
+  $('#pie').innerHTML = `<button class="principal" id="enviar">Hacer pedido</button><button class="secundario" id="volver">Volver al carrito</button>`;
+  $('#volver').onclick = () => { vista = 'carrito'; pintarCarrito(); };
+  $('#enviar').onclick = enviar;
+}
+async function enviar() {
+  const f = Object.fromEntries(new FormData($('#forma')).entries());
+  const tel = String(f.telefono || '').replace(/\D/g, '').slice(-10);
+  const falta = f.nombre.trim().length < 3 ? 'Escribe tu nombre completo.' : tel.length !== 10 ? 'Escribe tu WhatsApp a 10 dígitos.'
+    : f.direccion.trim().length < 6 ? 'Escribe tu dirección de entrega.' : !/^\d{5}$/.test(f.cp) ? 'Escribe tu código postal (5 dígitos).'
+    : !f.municipio ? 'Elige tu municipio.' : !lineas().length ? 'Tu carrito está vacío.' : '';
+  guardar('cz_datos', {nombre: f.nombre, telefono: f.telefono, direccion: f.direccion, cp: f.cp, municipio: f.municipio, tipo: f.tipo});
+  if (falta) { pintarDatos(falta); return; }
+  const b = $('#enviar'); b.disabled = true; b.textContent = 'Enviando…';
+  try {
+    const r = await fetch(API, {method: 'POST', redirect: 'follow', headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({...f, telefono: tel, lineas: Object.entries(carrito).map(([sku, cantidad]) => ({sku, cantidad}))})});
+    const d = await r.json();
+    if (!d.ok) { localStorage.removeItem('cz_catalogo'); refrescar(); pintarDatos(d.error || 'No pudimos registrar tu pedido.'); return; }
+    carrito = {}; guardar('cz_carrito', carrito); pintarContador(); localStorage.removeItem('cz_catalogo'); refrescar();
+    pintarGracias(d);
+  } catch (e) {
+    pintarDatos('No hubo conexión. Intenta de nuevo o escríbenos por WhatsApp.');
+  }
+}
+function pintarGracias(d) {
+  vista = 'gracias';
+  $('#titulo-panel').textContent = '¡Pedido recibido!';
+  if (d.duplicado) { $('#cuerpo').innerHTML = `<div class="ok"><h3>Ya lo teníamos</h3><p>${esc(d.mensaje)}</p></div>`; }
+  else {
+    $('#cuerpo').innerHTML = `<div class="ok"><h3>Pedido ${esc(d.pedido)}</h3><p>${esc(d.mensaje)}</p>
+      <table>${(d.lineas || []).map(l => `<tr><td>${l.cantidad} × ${esc(l.producto)}${l.tueste ? ' · ' + esc(l.tueste) : ''}</td><td>${pesos(l.importe)}</td></tr>`).join('')}
+      <tr><td><b>Total</b></td><td><b>${pesos(d.total)}</b></td></tr></table>
+      <p class="nota">Puedes pagar con tarjeta, por transferencia (te mandamos los datos por WhatsApp) o contra entrega.</p></div>`;
+  }
+  $('#pie').innerHTML = (d.pago ? `<a class="boton-link pagar" href="${esc(d.pago)}" target="_blank" rel="noopener">Pagar con tarjeta</a>` : '') +
+    `<a class="boton-link wa" href="${esc(d.whatsapp || whatsapp)}" target="_blank" rel="noopener">Confirmar por WhatsApp</a>
+     <button class="secundario" onclick="cerrar()">Seguir comprando</button>`;
+}
+
+cargarCatalogo(); pintarContador();
+</script>
+</body>
+</html>
