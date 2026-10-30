@@ -102,8 +102,10 @@ footer{text-align:center;color:var(--gris);font-size:13px;padding:24px 16px;line
 footer a{color:var(--verde)}
 .casilla{display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:13px;line-height:1.4}
 .casilla input{width:auto;margin:2px 0 0;flex:none;accent-color:var(--verde)}
-.aviso{font-size:11.5px;color:var(--gris);line-height:1.45;margin:0}
+.aviso{font-size:12px;color:var(--gris);line-height:1.45;margin:0}
 .aviso a{color:var(--verde)}
+.aviso details{margin-top:4px}
+.aviso summary{cursor:pointer;color:var(--verde);text-decoration:underline}
 @media (min-width:720px){.btn-wa{display:inline-block}}
 @media (max-width:420px){.grid{grid-template-columns:1fr 1fr;gap:10px}.info{padding:10px}.info h3{font-size:16px}.desc{display:none}.agregar{padding:8px 10px;font-size:14px}.precio{font-size:16px}}
 </style>
@@ -131,7 +133,7 @@ footer a{color:var(--verde)}
 <main>
   <div id="lista" class="grid"><div class="cargando">Cargando catálogo…</div></div>
 </main>
-<footer>Casa Zavala · Entregas en Monterrey y área metropolitana · Envíos nacionales con cotización sin compromiso · Pagos por transferencia, tarjeta o contra entrega<br>Contacto: <a href="mailto:casa.zavala.mty@gmail.com">casa.zavala.mty@gmail.com</a> · WhatsApp 81 1508 8658<br>Casa Zavala distribuye productos de terceros; las marcas y etiquetas pertenecen a sus respectivos titulares.<br><a href="privacidad.html">Aviso de privacidad</a> · <a href="terminos.html">Términos y condiciones</a></footer>
+<footer>Casa Zavala · Entregas en Monterrey y área metropolitana · Envíos nacionales con cotización sin compromiso · Pagos por transferencia, tarjeta o contra entrega</footer>
 
 <div class="velo" id="velo"></div>
 <aside class="panel" id="panel" aria-label="Carrito" aria-hidden="true">
@@ -142,8 +144,8 @@ footer a{color:var(--verde)}
 
 <script>
 /* ===== Configuración ===== */
-const API = 'https://script.google.com/macros/s/AKfycbwYEuwQYqOez2H128KDTpl2fyjH3N41GyfsT4neiIFlyiMp72CXTfsVKnjYQM9kENvT/exec';
-const MODO_DEV = false;   // en producción: false (quita la franja roja)
+const API = 'https://script.google.com/macros/s/AKfycbwYEuwQYqOez2H128KDTpl2fyjH3N41GyfsT4neiIFlyiMp72CXTfsVKnjYQM9kENvT/exec';   // ← la misma URL .../exec que ya tienes en tu index.html de GitHub
+const MODO_DEV = false;  // producción
 const MUNICIPIOS = ['Monterrey','San Pedro','San Nicolás','Apodaca','Guadalupe','Escobedo','Santa Catarina','Santiago','Juárez','García','Otro'];
 const MIN_CACHE = 5;
 
@@ -276,7 +278,7 @@ function pintarCarrito() {
     </div>`).join('');
   const total = ls.reduce((a, {p, c}) => a + p.precio * c, 0);
   $('#pie').innerHTML = `<div class="total"><span>Subtotal</span><span>${pesos(total)}</span></div>
-    <p class="nota">Precio normal. Si tienes código de descuento lo pones en el siguiente paso; el total final te lo confirmamos al registrar el pedido. Consulta los <a href="terminos.html" target="_blank" rel="noopener">términos de entrega, cambios y devoluciones</a>.</p>
+    <p class="nota">Precio normal. Si tienes código de descuento lo pones en el siguiente paso; el total final te lo confirmamos al registrar el pedido.</p>
     <button class="principal" id="ir-datos">Continuar</button>`;
   $('#ir-datos').onclick = () => { vista = 'datos'; pintarDatos(); };
 }
@@ -302,9 +304,6 @@ function pintarDatos(error) {
     <label>Código de descuento (opcional)<input name="codigo" autocomplete="off" value="${esc(d.codigo)}"></label>
     <p class="nota" style="margin:-2px 0 0">¿Fuera de Monterrey y área metropolitana? Elige «Otro» en municipio: envíos nacionales disponibles bajo previa cotización de envío; te cotizamos por WhatsApp antes de cobrar.</p>
     <label>Comentarios (opcional)<textarea name="notas" maxlength="300">${esc(d.notas)}</textarea></label>
-    <label class="casilla"><input type="checkbox" name="sinPromos" value="si" ${d.sinPromos ? 'checked' : ''}>No quiero recibir promociones por WhatsApp.</label>
-    <label class="casilla"><input type="checkbox" name="permisoMeta" value="si">Acepto que Casa Zavala comparta mi teléfono, nombre y código postal cifrados con Meta (Facebook e Instagram) para medir sus anuncios. Opcional.</label>
-    <p class="aviso">Alejandro Zavala (Casa Zavala), Simón Bolívar 610, San Nicolás de los Garza, N.L., usa tu nombre, WhatsApp y dirección para registrar, entregar y cobrar tu pedido; si no te opones, también para enviarte promociones y, solo si lo autorizas, para medir sus anuncios en Meta. Compartimos lo necesario con Clip (pagos), repartidores y paquetería. Puedes negarte a los usos opcionales o ejercer tus derechos en casa.zavala.mty@gmail.com. Al hacer tu pedido aceptas los <a href="terminos.html" target="_blank" rel="noopener">términos y condiciones</a>. <a href="privacidad.html" target="_blank" rel="noopener">Aviso de privacidad completo</a>.</p>
     <div class="trampa" aria-hidden="true"><label>Sitio web<input name="website" tabindex="-1" autocomplete="off"></label></div>
   </form>`;
   $('#pie').innerHTML = `<button class="principal" id="enviar">Hacer pedido</button><button class="secundario" id="volver">Volver al carrito</button>`;
@@ -317,12 +316,12 @@ async function enviar() {
   const falta = f.nombre.trim().length < 3 ? 'Escribe tu nombre completo.' : tel.length !== 10 ? 'Escribe tu WhatsApp a 10 dígitos.'
     : f.direccion.trim().length < 6 ? 'Escribe tu dirección de entrega.' : !/^\d{5}$/.test(f.cp) ? 'Escribe tu código postal (5 dígitos).'
     : !f.municipio ? 'Elige tu municipio.' : !lineas().length ? 'Tu carrito está vacío.' : '';
-  guardar('cz_datos', {nombre: f.nombre, telefono: f.telefono, direccion: f.direccion, cp: f.cp, municipio: f.municipio, tipo: f.tipo, sinPromos: f.sinPromos === 'si'});
+  guardar('cz_datos', {nombre: f.nombre, telefono: f.telefono, direccion: f.direccion, cp: f.cp, municipio: f.municipio, tipo: f.tipo});
   if (falta) { pintarDatos(falta); return; }
   const b = $('#enviar'); b.disabled = true; b.textContent = 'Enviando…';
   try {
     const r = await fetch(API, {method: 'POST', redirect: 'follow', headers: {'Content-Type': 'text/plain;charset=utf-8'},
-      body: JSON.stringify({...f, telefono: tel, permisoMeta: f.permisoMeta === 'si', sinPromos: f.sinPromos === 'si', lineas: Object.entries(carrito).map(([sku, cantidad]) => ({sku, cantidad}))})});
+      body: JSON.stringify({...f, telefono: tel, lineas: Object.entries(carrito).map(([sku, cantidad]) => ({sku, cantidad}))})});
     const d = await r.json();
     if (!d.ok) { localStorage.removeItem('cz_catalogo'); refrescar(); pintarDatos(d.error || 'No pudimos registrar tu pedido.'); return; }
     carrito = {}; guardar('cz_carrito', carrito); pintarContador(); localStorage.removeItem('cz_catalogo'); refrescar();
