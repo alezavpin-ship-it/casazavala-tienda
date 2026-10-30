@@ -1,0 +1,12 @@
+Casa Zavala · tienda en línea con aviso de privacidad (30 oct 2026)
+
+Archivos nuevos: privacidad.html y terminos.html (se suben tal cual a producción).
+index.html de este paquete es la versión DEV (API de DEV y franja roja).
+
+Para producción (GitHub), en TU index.html de producción:
+  1. Copia de este index.html los 4 cambios: estilos (.casilla, .aviso, footer a), el pie de página,
+     las dos casillas + aviso corto del formulario, y el envío de permisoMeta / sinPromos en enviar().
+  O más fácil: sube este index.html y cambia solo dos líneas:
+     const API = '<URL de tu API de producción>';
+     const MODO_DEV = false;
+  2. Sube privacidad.html y terminos.html a la raíz del repositorio (junto a index.html).
