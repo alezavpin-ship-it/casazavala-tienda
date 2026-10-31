@@ -32,13 +32,18 @@ header{position:sticky;top:0;z-index:20;background:var(--verde);color:var(--crem
 .btn-wa{display:none;color:var(--crema);text-decoration:none;font-size:13px;border:1px solid rgba(255,255,255,.3);padding:8px 12px;border-radius:999px}
 .btn-carrito{position:relative;background:var(--rojo);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer}
 .btn-carrito b{background:#fff;color:var(--cafe);border-radius:999px;padding:1px 8px;margin-left:6px;font-size:13px}
-.hero{max-width:1120px;margin:0 auto;padding:28px 16px 8px;display:flex;align-items:center;gap:24px}
-.hero-logo{width:132px;height:132px;flex:none;border-radius:50%;box-shadow:0 6px 24px rgba(30,78,52,.25)}
-@media (max-width:560px){.hero{flex-direction:column;align-items:flex-start;gap:14px}.hero-logo{width:96px;height:96px}}
-.hero h1{font-family:Fraunces,serif;font-size:clamp(28px,6vw,44px);line-height:1.05;margin:0 0 8px}
-.hero p{margin:0;color:var(--gris);max-width:620px}
+.hero{--logo:clamp(64px,24vw,132px);max-width:1120px;margin:0 auto;padding:clamp(16px,4vw,28px) 16px 8px;display:flex;flex-direction:row;align-items:center;gap:clamp(12px,4vw,24px)}
+.hero-texto{flex:1;min-width:0}
+.hero-logo{width:100%;height:100%;display:block;border-radius:50%;box-shadow:0 6px 24px rgba(30,78,52,.25)}
+.hero h1{font-family:Fraunces,serif;font-size:clamp(19px,6.4vw,44px);line-height:1.05;margin:0 0 6px}
+.hero p{margin:0;color:var(--gris);max-width:620px;font-size:clamp(12.5px,3.6vw,16px);line-height:1.45}
+/* Logo con decoración de temporada (TEMPORADA en el script) */
+.logo-temp{position:relative;flex:none;width:var(--logo);height:var(--logo)}
+/* La pieza de temporada (img/temporada/*.svg, 1200×1200) rodea al logo: el logo ocupa 790 px al centro (205 a 995) */
+.logo-temp .pieza{position:absolute;width:151.9%;height:151.9%;left:-25.95%;top:-25.95%;max-width:none;pointer-events:none;user-select:none}
+.logo-temp[data-temporada]{margin:calc(var(--logo)*.06) calc(var(--logo)*.1) calc(var(--logo)*.2)}
 .link-wa{color:var(--verde);font-weight:600}
-.envios{text-decoration:none;display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:#fff;border:1px solid var(--ambar);color:var(--verde);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600}
+.envios{text-decoration:none;display:inline-flex;align-items:center;gap:8px;margin-top:10px;background:#fff;border:1px solid var(--ambar);color:var(--verde);border-radius:999px;padding:6px 12px;font-size:clamp(11px,3.2vw,13.5px);font-weight:600;line-height:1.3}
 .envios:before{content:'';width:8px;height:8px;border-radius:50%;background:var(--ambar)}
 .filtros{max-width:1120px;margin:0 auto;padding:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .grupo{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
@@ -99,6 +104,10 @@ textarea{min-height:64px;resize:vertical}
 .ok td:last-child{text-align:right}
 .boton-link{display:block;text-align:center;text-decoration:none;border-radius:12px;padding:13px;font-weight:600;margin-top:8px}
 .pagar{background:var(--ambar);color:#fff}.wa{background:#1f8f4e;color:#fff}
+.redes{display:flex;justify-content:center;align-items:center;gap:18px;padding:22px 16px 0}
+.redes a{display:block;width:40px;height:40px;border-radius:12px;transition:transform .15s}
+.redes a:hover,.redes a:focus-visible{transform:translateY(-2px)}
+.redes img{width:40px;height:40px;display:block}
 footer{text-align:center;color:var(--gris);font-size:13px;padding:24px 16px;line-height:1.7}
 footer a{color:var(--verde)}
 .casilla{display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:13px;line-height:1.4}
@@ -120,8 +129,8 @@ footer a{color:var(--verde)}
 </header>
 
 <section class="hero">
-  <img class="hero-logo" src="logo.webp" alt="Casa Zavala · Café de origen · Est. 2026" width="132" height="132">
-  <div>
+  <div class="logo-temp" id="logo-temp"><img class="hero-logo" src="logo.webp" alt="Casa Zavala · Café de origen · Est. 2026" width="132" height="132"></div>
+  <div class="hero-texto">
   <h1>Selecciona tu pedido:</h1>
   <p>En grano o molido, tueste americano o europeo. Elige, arma tu carrito. Envíos locales en Monterrey y área metropolitana. "Si tienes dudas, <a class="link-wa" id="dudas-wa" href="#" target="_blank" rel="noopener">mándanos un WhatsApp</a>".</p>
   <a class="envios" id="cotizar" href="#" target="_blank" rel="noopener">Contamos con envíos nacionales. Solicita tu cotización de envío sin compromiso.</a>
@@ -132,6 +141,12 @@ footer a{color:var(--verde)}
 <main>
   <div id="lista" class="grid"><div class="cargando">Cargando catálogo…</div></div>
 </main>
+<nav class="redes" aria-label="Redes sociales de Casa Zavala">
+  <a href="https://www.instagram.com/casazavalamty" target="_blank" rel="noopener" aria-label="Instagram @casazavalamty" title="Instagram @casazavalamty"><img src="img/redes/instagram.webp" alt="Instagram" width="40" height="40" loading="lazy"></a>
+  <a href="https://www.facebook.com/CasaZavalaMty" target="_blank" rel="noopener" aria-label="Facebook Casa Zavala" title="Facebook Casa Zavala"><img src="img/redes/facebook.webp" alt="Facebook" width="40" height="40" loading="lazy"></a>
+  <a href="https://www.tiktok.com/@casa.zavala.coffee" target="_blank" rel="noopener" aria-label="TikTok Casa Zavala Coffee Shop Mty" title="TikTok Casa Zavala Coffee Shop Mty"><img src="img/redes/tiktok.webp" alt="TikTok" width="40" height="40" loading="lazy"></a>
+  <a href="https://wa.me/528115088658" id="redes-wa" target="_blank" rel="noopener" aria-label="WhatsApp Casa Zavala" title="WhatsApp Casa Zavala"><img src="img/redes/whatsapp.webp" alt="WhatsApp" width="40" height="40" loading="lazy"></a>
+</nav>
 <footer>Casa Zavala · Entregas en Monterrey y área metropolitana · Envíos nacionales con cotización sin compromiso · Pagos por transferencia, tarjeta o contra entrega<br>Contacto: <a href="mailto:casa.zavala.mty@gmail.com">casa.zavala.mty@gmail.com</a> · WhatsApp 81 1508 8658<br>Casa Zavala distribuye productos de terceros; las marcas y etiquetas pertenecen a sus respectivos titulares.<br><a href="privacidad.html">Aviso de privacidad</a> · <a href="terminos.html">Términos y condiciones</a></footer>
 
 <div class="velo" id="velo"></div>
@@ -147,6 +162,9 @@ const API = 'https://script.google.com/macros/s/AKfycbwYEuwQYqOez2H128KDTpl2fyjH
 const MODO_DEV = false;   // en producción: false (quita la franja roja)
 const MUNICIPIOS = ['Monterrey','San Pedro','San Nicolás','Apodaca','Guadalupe','Escobedo','Santa Catarina','Santiago','Juárez','García','Otro'];
 const MIN_CACHE = 5;
+// Decoración de temporada alrededor del logo: 'auto' (por fecha), 'halloween', 'muertos', 'navidad' o 'ninguna'
+// auto = Halloween del 15 al 31 oct · Día de Muertos del 1 al 5 nov · Navidad del 1 dic al 6 ene
+const TEMPORADA = 'auto';
 
 /* ===== Utilidades ===== */
 const $ = s => document.querySelector(s);
@@ -162,6 +180,20 @@ let whatsapp = 'https://wa.me/528115088658';
 let carrito = leer('cz_carrito', {});   // {sku: cantidad}
 const filtro = {categoria: 'Café', proveedor: 'Todas', tueste: 'Todos', presentacion: 'Todos', tamano: 'Todos', origen: 'Todos'};
 if (!MODO_DEV) $('#aviso-dev').remove();
+
+/* ===== Logo de temporada ===== */
+(function decorarLogo() {
+  const hoy = new Date(), m = hoy.getMonth() + 1, d = hoy.getDate();
+  const t = TEMPORADA !== 'auto' ? TEMPORADA
+    : m === 10 && d >= 15 ? 'halloween'
+    : m === 11 && d <= 5 ? 'muertos'
+    : m === 12 || (m === 1 && d <= 6) ? 'navidad' : 'ninguna';
+  // Piezas en img/temporada: halloween.svg (calabazas), muertos.svg (cempasúchil y calaverita), navidad.svg (guirnalda)
+  if (['halloween', 'muertos', 'navidad'].indexOf(t) < 0) return;
+  const w = $('#logo-temp');
+  w.dataset.temporada = t;
+  w.insertAdjacentHTML('beforeend', `<img class="pieza" src="img/temporada/${t}.svg" alt="" aria-hidden="true">`);
+})();
 
 /* ===== Catálogo ===== */
 async function cargarCatalogo() {
@@ -185,6 +217,7 @@ function usarCatalogo(d) {
   if (d.whatsapp) whatsapp = d.whatsapp;
   $('#link-wa').href = whatsapp;
   $('#dudas-wa').href = whatsapp;
+  $('#redes-wa').href = whatsapp;
   $('#cotizar').href = whatsapp + (whatsapp.indexOf('?') < 0 ? '?' : '&') + 'text=' +
     encodeURIComponent('Hola, quiero cotizar un envío nacional de café. Mi código postal es: ');
   // Quita del carrito lo que ya no existe
