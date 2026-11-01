@@ -59,7 +59,17 @@ main{max-width:1120px;margin:0 auto;padding:0 16px 120px}
 .card{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden;display:flex;flex-direction:column}
 .foto{aspect-ratio:1/1;background:#efe4d4;position:relative}
 .foto .sello{position:static;width:64px;height:64px;opacity:.85;margin-bottom:8px}
-.foto>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.foto>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .35s ease}
+.foto.lista>img{opacity:1}
+/* Skeleton: brillo mientras carga la foto o el catálogo */
+@keyframes brillo{0%{background-position:100% 50%}100%{background-position:0 50%}}
+.foto.esperando,.esq{background:linear-gradient(90deg,#efe4d4 25%,#f9f1e6 40%,#efe4d4 60%);background-size:400% 100%;animation:brillo 1.3s ease-in-out infinite}
+.foto.esperando .sin{visibility:hidden}
+.card.skel .info{gap:8px}
+.esq{border-radius:6px;height:12px}
+.esq.t{height:18px;width:70%}.esq.m{width:45%}.esq.c{width:90%}
+.esq.p{height:22px;width:35%}.esq.b{height:36px;width:84px;border-radius:10px}
+@media (prefers-reduced-motion:reduce){.foto.esperando,.esq{animation:none}.foto>img{transition:none}}
 .foto .sin{position:absolute;inset:0;display:grid;place-items:center;color:var(--cafe2);font-family:Fraunces,serif;font-size:20px;text-align:center;padding:16px}
 .badge{position:absolute;z-index:1;top:10px;right:10px;font-size:12px;font-weight:600;padding:4px 9px;border-radius:999px;background:#fff;color:var(--cafe)}
 .badge.agotado{background:var(--rojo);color:#fff}.badge.ultimas{background:var(--ambar);color:#fff}
@@ -141,7 +151,7 @@ footer a{color:var(--verde)}
 
 <nav class="filtros" id="filtros" aria-label="Filtros"></nav>
 <main>
-  <div id="lista" class="grid"><div class="cargando">Cargando catálogo…</div></div>
+  <div id="lista" class="grid" aria-busy="true"><span class="cargando" style="position:absolute;left:-9999px">Cargando catálogo…</span><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article></div>
 </main>
 <nav class="redes" aria-label="Redes sociales de Casa Zavala">
   <a href="https://www.instagram.com/casazavalamty" target="_blank" rel="noopener" aria-label="Instagram @casazavalamty" title="Instagram @casazavalamty"><img src="img/redes/instagram.webp" alt="Instagram" width="40" height="40" loading="lazy"></a>
@@ -211,7 +221,7 @@ async function refrescar(mostrarError) {
     guardar('cz_catalogo', {t: Date.now(), d});
     usarCatalogo(d);
   } catch (e) {
-    if (mostrarError) $('#lista').innerHTML = '<div class="vacio">No pudimos cargar el catálogo. Revisa tu conexión o escríbenos por WhatsApp.</div>';
+    if (mostrarError) { $('#lista').removeAttribute('aria-busy'); $('#lista').innerHTML = '<div class="vacio">No pudimos cargar el catálogo. Revisa tu conexión o escríbenos por WhatsApp.</div>'; }
   }
 }
 function usarCatalogo(d) {
@@ -277,12 +287,13 @@ function pintarLista() {
   const ok = (campo) => p => filtro[campo] === 'Todos' || filtro[campo] === 'Todas' || p[campo] === filtro[campo];
   const lista = catalogo.filter(p => p.categoria === filtro.categoria).filter(ok('proveedor')).filter(ok('tueste')).filter(ok('presentacion')).filter(ok('tamano')).filter(ok('origen'))
     .sort((a, b) => a.proveedor.localeCompare(b.proveedor) || gramos(a.tamano) - gramos(b.tamano));
+  $('#lista').removeAttribute('aria-busy');
   if (!lista.length) { $('#lista').innerHTML = '<div class="vacio">No hay productos con esos filtros.</div>'; return; }
   $('#lista').innerHTML = lista.map(p => {
     const badge = !p.hay ? '<span class="badge agotado">Agotado</span>' : p.ultimas ? '<span class="badge ultimas">Últimas piezas</span>' : '';
     const titulo = p.categoria === 'Bombones' ? p.producto : `${p.presentacion} ${p.tamano}`;
     return `<article class="card">
-      <div class="foto"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(titulo)}</div></div>${p.imagen ? `<img loading="lazy" src="${esc(p.imagen)}" alt="${esc(p.producto + ' ' + p.tueste)}" onerror="this.remove()">` : ''}${badge}</div>
+      <div class="foto${p.imagen ? ' esperando' : ''}"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(titulo)}</div></div>${p.imagen ? `<img loading="lazy" src="${esc(p.imagen)}" alt="${esc(p.producto + ' ' + p.tueste)}" onload="this.parentNode.classList.remove('esperando');this.parentNode.classList.add('lista')" onerror="this.parentNode.classList.remove('esperando');this.remove()">` : ''}${badge}</div>
       <div class="info">
         <div class="meta">${esc([p.proveedor, p.tueste, p.origen].filter(Boolean).join(' · '))}</div>
         <h3>${esc(titulo)}</h3>
