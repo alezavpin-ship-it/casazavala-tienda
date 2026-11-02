@@ -135,9 +135,9 @@ footer a{color:var(--verde)}
 <div class="dev" id="aviso-dev">MODO DESARROLLO · los pedidos de esta página van a la hoja de prueba (DEV), no son reales</div>
 <header>
   <div class="barra">
-    <div class="marca"><img src="logo.webp" alt="" width="46" height="46"><div>Casa Zavala<small>Café de origen · ☕ "Servido con orgullo" ☕</small></div></div>
-    <a class="btn-wa" id="link-wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
-    <button class="btn-carrito" id="abrir-carrito" aria-label="Abrir carrito">Carrito <b id="num-carrito">0</b></button>
+    <div class="marca"><img src="logo.webp" alt="" width="48" height="48"><div>Casa Zavala<small>Café de origen · "Servido con orgullo" </small></div></div>
+    <a class="btn-wa" id="link-wa" href="#" target="_blank" rel="noopener">Contactanos: WhatsApp</a>
+    <button class="btn-carrito" id="abrir-carrito" aria-label="Abrir carrito">Mi Carrito <b id="num-carrito">0</b></button>
   </div>
 </header>
 
@@ -234,6 +234,28 @@ function usarCatalogo(d) {
   Object.keys(carrito).forEach(s => { if (!catalogo.find(p => p.sku === s)) delete carrito[s]; });
   guardar('cz_carrito', carrito);
   pintarFiltros(); pintarLista(); pintarContador();
+  abrirEnlaceProducto();
+}
+
+/* ===== Link directo a un producto (catálogos de Facebook, Instagram y WhatsApp) =====
+   casazavala.com.mx/?sku=CZ-VER-250-MO-EU agrega ese producto al carrito y lo abre.
+   Acepta también los ID del catálogo de Meta (CZ-BOM-CH → CZ-VER-BOM-CH). Solo actúa una vez por visita. */
+let enlaceUsado = false;
+function abrirEnlaceProducto() {
+  if (enlaceUsado) return;
+  let pedido;
+  try { pedido = new URLSearchParams(location.search).get('sku'); } catch (e) { return; }
+  if (!pedido) return;
+  enlaceUsado = true;
+  const id = String(pedido).toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 40);
+  const p = catalogo.find(x => x.sku === id) || catalogo.find(x => x.sku === id.replace(/^CZ-(?!VER-)/, 'CZ-VER-'));
+  try { const u = new URL(location.href); u.searchParams.delete('sku'); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e) {}
+  if (!p) return;
+  if (p.categoria && filtro.categoria !== p.categoria) { filtro.categoria = p.categoria; Object.assign(filtro, SIN_FILTRO); pintarFiltros(); pintarLista(); }
+  if (!p.hay) { pintarLista(); return; }
+  if (!carrito[p.sku]) cambiar(p.sku, +1);
+  pintarLista();
+  abrir('carrito');
 }
 
 /* ===== Filtros ===== */
