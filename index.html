@@ -135,7 +135,7 @@ footer a{color:var(--verde)}
 .ver{background:none;border:0;padding:0;color:var(--verde);font-size:13px;font-weight:600;text-decoration:underline;cursor:pointer;align-self:flex-start}
 .ficha-velo{position:fixed;inset:0;background:rgba(20,12,8,.55);z-index:40;display:none;align-items:center;justify-content:center;padding:16px}
 .ficha-velo.abierto{display:flex}
-.ficha{background:var(--papel);border-radius:18px;width:min(940px,100%);max-height:calc(100vh - 32px);overflow:auto;position:relative;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 18px 60px rgba(0,0,0,.35)}
+.ficha{align-content:start;background:var(--papel);border-radius:18px;width:min(940px,100%);max-height:calc(100vh - 32px);overflow:auto;position:relative;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 18px 60px rgba(0,0,0,.35)}
 .ficha-cerrar{position:absolute;top:10px;right:10px;z-index:3;width:38px;height:38px;border-radius:50%;border:0;background:#fff;color:var(--cafe);font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .ficha-foto{position:sticky;top:0;align-self:start;padding:16px}
 .zoom{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#efe4d4;cursor:zoom-in;touch-action:pan-y}
@@ -155,8 +155,6 @@ footer a{color:var(--verde)}
 .bloque{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:12px 14px}
 .bloque h3{margin:0 0 6px;font-family:Fraunces,serif;font-size:17px}
 .bloque p{margin:0 0 6px;font-size:14px;line-height:1.5;color:#4b3f37}
-.bloque ul{margin:4px 0 0;padding-left:18px;font-size:14px;line-height:1.5;color:#4b3f37}
-.bloque li{margin:2px 0}
 .aviso-prep{background:#fff5e0;border-color:#efd9a8}
 .tabla-molienda{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:4px}
 .tabla-molienda td{padding:5px 0;border-bottom:1px solid var(--linea)}
@@ -165,6 +163,25 @@ footer a{color:var(--verde)}
 .ficha-acciones .principal{width:auto;flex:1;min-width:180px}
 .ficha-acciones .cant b{min-width:22px;text-align:center}
 .link-dudas{font-size:13px;color:var(--verde);font-weight:600}
+/* Íconos de la ficha */
+.ico{width:34px;height:34px;flex:none;fill:none;stroke:var(--cafe2);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.ico .r{fill:#7a4b2c;stroke:none}.ico .a{fill:var(--ambar);stroke:none}.ico .x{stroke:var(--rojo)}
+.ico.grande{width:52px;height:52px;padding:6px;border-radius:14px;background:var(--crema);stroke:var(--verde)}
+.ico.chico{width:20px;height:20px;vertical-align:-5px;stroke-width:2.6}
+.bloque-cab{display:flex;gap:12px;align-items:flex-start}.bloque-cab>div{flex:1;min-width:0}
+.bloque .sub{margin:10px 0 6px;font-size:11px;font-weight:600;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+.metodos{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.metodos li{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-size:12.5px;line-height:1.25;color:#4b3f37;background:var(--papel);border:1px solid var(--linea);border-radius:10px;padding:8px 6px}
+.metodos .ico{width:38px;height:38px}
+.pasos{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px;counter-reset:paso}
+.pasos li{display:flex;gap:12px;align-items:center}
+.pasos .ico{width:44px;height:44px;padding:4px;border-radius:12px;background:var(--crema)}
+.pasos b{display:block;font-size:14px}.pasos span{font-size:13.5px;color:#5b5048;line-height:1.4}
+.nota-prep{font-size:13px!important;margin:10px 0 0!important}
+.tabla-molienda td{vertical-align:middle}
+.tabla-molienda td:first-child{width:34px;padding-right:8px}
+.tabla-molienda .ico{width:28px;height:28px}
+.part{width:70px;height:18px;fill:#7a4b2c;display:block;margin-left:auto}
 @media (max-width:720px){
   .ficha-velo{padding:0;align-items:stretch}
   .ficha{grid-template-columns:1fr;border-radius:0;max-height:100vh;height:100%}
@@ -382,46 +399,89 @@ $('#lista').addEventListener('click', e => {
 });
 
 /* ===== Ficha de producto =====
-   Textos por tueste y por molienda: edítalos aquí. Si el catálogo (pestaña Tienda) trae «descripcion», se muestra arriba. */
+   Textos por tueste y por molienda: edítalos aquí. Si el catálogo (pestaña Tienda) trae «descripcion», se muestra arriba.
+   Cada método lleva su ícono (nombre del ícono en ICO, más abajo). */
 const TUESTES = {
   Americano: {
-    titulo: 'Tueste Americano · suave',
+    titulo: 'Tueste Americano · suave', icono: 'taza',
     texto: 'Tueste más claro: sabor suave y redondo, con menos amargor y más dulzor natural. Se disfruta solo, sin leche, y en taza grande.',
-    ideal: ['Cafetera de goteo con filtro', 'Filtro manual (V60, Chemex)', 'Prensa francesa', 'Café de olla']
+    ideal: [['goteo', 'Cafetera de goteo con filtro'], ['v60', 'Filtro manual (V60)'], ['chemex', 'Chemex'], ['prensa', 'Prensa francesa'], ['olla', 'Café de olla']]
   },
   Europeo: {
-    titulo: 'Tueste Europeo · intenso',
+    titulo: 'Tueste Europeo · intenso', icono: 'espresso',
     texto: 'Tueste más oscuro: más cuerpo y sabor intenso, con amargor agradable. Aguanta bien la leche, por eso es el favorito para capuchino y latte.',
-    ideal: ['Café con leche, capuchino o latte', 'Cafetera italiana (moka)', 'Espresso (en grano, molido fino)', 'Cafetera de goteo si te gusta cargado']
+    ideal: [['latte', 'Con leche: capuchino o latte'], ['moka', 'Cafetera italiana (moka)'], ['espresso', 'Espresso (en grano, molido fino)'], ['goteo', 'Goteo, si te gusta cargado']]
   }
 };
-const MOLIENDAS = [['Espresso', 'Fina'], ['Cafetera italiana (moka)', 'Fina a media'], ['Goteo y filtro (V60, Chemex)', 'Media'], ['Café de olla', 'Media a gruesa'], ['Prensa francesa', 'Gruesa']];
+const MOLIENDAS = [['espresso', 'Espresso', 'Fina'], ['moka', 'Cafetera italiana (moka)', 'Fina a media'], ['v60', 'Goteo y filtro (V60, Chemex)', 'Media'], ['olla', 'Café de olla', 'Media a gruesa'], ['prensa', 'Prensa francesa', 'Gruesa']];
 
+/* Íconos de la ficha (SVG en línea, 48×48, trazo = color del texto) */
+const ICO = {
+  taza: '<path d="M10 18h22v14a8 8 0 0 1-8 8h-6a8 8 0 0 1-8-8z"/><path d="M32 22h3a5 5 0 0 1 0 10h-3"/><path class="r" d="M12.5 21.5h17v2h-17z"/><path d="M17 6c-2 3 2 4 0 7M24 6c-2 3 2 4 0 7"/>',
+  espresso: '<path d="M14 22h18v6a7 7 0 0 1-7 7h-4a7 7 0 0 1-7-7z"/><path d="M32 24h2a3.5 3.5 0 0 1 0 7h-2"/><path d="M8 40h30"/><ellipse class="a" cx="23" cy="22" rx="9" ry="2.2"/><path d="M20 10c-2 3 2 4 0 7M26 10c-2 3 2 4 0 7"/>',
+  latte: '<path d="M14 8h20l-2.5 32h-15z"/><path class="r" d="M16.2 25h15.6l-1.1 13.6H17.3z"/><path d="M15.2 18h17.6"/><path class="a" d="M24 14.5c-1.5-1.6-4 0-2.4 1.8L24 18.5l2.4-2.2c1.6-1.8-.9-3.4-2.4-1.8z"/>',
+  v60: '<path d="M9 10h30L28 25h-8z"/><path d="M15 25h18"/><path d="M14 29h20v6a7 7 0 0 1-7 7h-6a7 7 0 0 1-7-7z"/><path class="r" d="M16 32h16v2.5a5 5 0 0 1-5 5h-6a5 5 0 0 1-5-5z"/><path d="M24 26v2"/>',
+  chemex: '<path d="M14 5h20l-7.5 17L34 39a4 4 0 0 1-3.7 4H17.7a4 4 0 0 1-3.7-4l7.5-17z"/><path class="a" d="M18.5 18h11l-2 6h-7z"/><path class="r" d="M19 34h10l2.6 5.5a1.6 1.6 0 0 1-1.4 2.2H17.8a1.6 1.6 0 0 1-1.4-2.2z"/>',
+  prensa: '<path d="M12 14h22"/><path d="M14 14h18v26a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2z"/><path d="M32 18h4v18h-4"/><path d="M23 4v10"/><circle cx="23" cy="4" r="2"/><path d="M15 23h16"/><path class="r" d="M15.2 26h15.6v13.8H15.2z"/>',
+  olla: '<path d="M12 16c-3 4-4 8-4 12 0 8 7 14 16 14s16-6 16-14c0-4-1-8-4-12z"/><path d="M10 15h28"/><path d="M38 21c6 0 6 10 0 10"/><path class="a" d="M14 27h20"/><path d="M19 4c-2 3 2 4 0 7M27 4c-2 3 2 4 0 7"/>',
+  moka: '<path d="M15 6h18l-3 15H18z"/><path d="M16 23h16"/><path d="M14 25h20l-3.5 16h-13z"/><path d="M15 9l-5-2.5"/><path d="M33 9h4l-1.5 10H31"/><circle cx="24" cy="4" r="1.6"/><path class="a" d="M17 30h14"/>',
+  goteo: '<path d="M10 6h28v7H10z"/><path d="M10 13h7v27h-7"/><path d="M8 41h32"/><path d="M20 13h16l-3 7H23z"/><path d="M22 25h12v11a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4z"/><path d="M34 28h2.5v6H34"/><path class="r" d="M23.5 31h9v4.5a3 3 0 0 1-3 3h-3a3 3 0 0 1-3-3z"/>',
+  molino: '<path d="M14 24h20v17H14z"/><path d="M16 24l-2.5-8h21L32 24"/><path d="M24 16V8h10"/><circle cx="36" cy="8" r="2.2"/><path d="M20 32h8"/>',
+  cuchara: '<ellipse cx="15" cy="31" rx="9" ry="6.5"/><path d="M23 27l17-15"/><path class="r" d="M9 31.5c2-3 10-3 12 0-1.5 2.5-10.5 2.5-12 0z"/>',
+  tetera: '<path d="M8 22h22v13a7 7 0 0 1-7 7h-8a7 7 0 0 1-7-7z"/><path d="M12 22c0-5 14-5 14 0"/><path d="M30 33c7 0 6-14 13-16"/><path d="M8 26c-5 0-5 9 0 9"/><path class="a" d="M17 16.5h4"/>',
+  filtro: '<path d="M9 11h30l-9 28H18z"/><path d="M17 11l3 28M24 11v28M31 11l-3 28"/>',
+  valvula: '<path d="M14 9h20l2.5 33h-25z"/><circle class="a" cx="24" cy="21" r="4.5"/><path d="M30 14l5-5M35 9h-4M35 9v4"/>',
+  zipper: '<path d="M11 8h26"/><path d="M11 13h26" stroke-dasharray="2.4 2.2"/><path d="M12 17h24l1.5 25h-27z"/><path class="a" d="M35 11l4 1-1 4"/>',
+  sinsol: '<circle cx="24" cy="24" r="7"/><path d="M24 7v5M24 36v5M7 24h5M36 24h5M12 12l3.5 3.5M32.5 32.5L36 36M12 36l3.5-3.5M32.5 15.5L36 12"/><path class="x" d="M8 40L40 8"/>',
+  sinrefri: '<path d="M14 5h20v38H14z"/><path d="M14 18h20"/><path d="M18 10v4M18 23v6"/><path class="x" d="M8 40L40 8"/>',
+  calendario: '<path d="M8 12h32v28H8z"/><path d="M8 20h32"/><path d="M16 8v8M32 8v8"/><path class="a" d="M17 30l5 5 9-10"/>',
+  regalo: '<path d="M9 20h30v8H9z"/><path d="M11 28h26v14H11z"/><path d="M24 20v22"/><path d="M24 20c-3-8-12-8-10-2s10 2 10 2zM24 20c3-8 12-8 10-2s-10 2-10 2z"/>',
+  bombon: '<rect x="8" y="18" width="16" height="14" rx="6"/><rect x="24" y="14" width="16" height="14" rx="6"/><rect x="18" y="28" width="16" height="13" rx="6"/><path class="a" d="M14 24h4M30 20h4M24 34h4"/>',
+  bolsa: '<path d="M14 8h20l2.5 34h-25z"/><path d="M14 13h20"/><circle cx="24" cy="21" r="3"/><path class="a" d="M17 28h14v7H17z"/>',
+  grano: '<ellipse cx="24" cy="24" rx="10" ry="14" transform="rotate(28 24 24)"/><path d="M19 13c7 6-3 15 4 23"/>'
+};
+const ico = (n, cls) => `<svg class="ico${cls ? ' ' + cls : ''}" viewBox="0 0 48 48" aria-hidden="true" focusable="false">${ICO[n] || ''}</svg>`;
+// Tamaño de partícula para la tabla de molienda (fina → gruesa)
+const PARTICULAS = {Fina: [16, 1.1], 'Fina a media': [12, 1.5], Media: [9, 2], 'Media a gruesa': [7, 2.6], Gruesa: [5, 3.3]};
+function particulas(g) {
+  const [n, r] = PARTICULAS[g] || [8, 2];
+  let c = '', x = r + 1, i = 0;
+  while (x < 70 - r && i < n) { c += `<circle cx="${x.toFixed(1)}" cy="${(9 + (i % 2 ? -2 : 2) * (r < 2 ? 1 : .5)).toFixed(1)}" r="${r}"/>`; x += (66 - 2 * r) / (n - 1 || 1); i++; }
+  return `<svg class="part" viewBox="0 0 70 18" aria-hidden="true">${c}</svg>`;
+}
+
+const pasos = items => `<ol class="pasos">${items.map(([i, t, d]) => `<li>${ico(i)}<div><b>${t}</b><span>${d}</span></div></li>`).join('')}</ol>`;
+function bloqueTueste(t) {
+  return `<div class="bloque"><div class="bloque-cab">${ico(t.icono, 'grande')}<div><h3>${esc(t.titulo)}</h3><p>${esc(t.texto)}</p></div></div>
+    <p class="sub">Ideal para</p><ul class="metodos">${t.ideal.map(([i, l]) => `<li>${ico(i)}<span>${esc(l)}</span></li>`).join('')}</ul></div>`;
+}
 function prepCafe(p) {
   const grano = /grano/i.test(p.presentacion || '');
   const aviso = grano
-    ? `<div class="bloque aviso-prep"><h3>Necesitas moler</h3><p>Este café viene en grano entero. Muélelo justo antes de preparar para conservar el aroma. Si no tienes molino, elige la versión <b>molida</b>.</p>
-       <table class="tabla-molienda">${MOLIENDAS.map(([m, g]) => `<tr><td>${m}</td><td>${g}</td></tr>`).join('')}</table></div>`
-    : `<div class="bloque aviso-prep"><h3>Listo para usar · molienda media</h3><p>Ya viene molido; no necesitas molino. Úsalo en <b>cafetera de goteo con filtro</b> (de papel o de tela) o en filtro manual tipo V60 o Chemex. También funciona en café de olla.</p>
-       <ul><li>Para espresso se necesita molienda fina: mejor pide el café en grano.</li><li>En prensa francesa puede quedar un poco de asiento en la taza.</li></ul></div>`;
-  const receta = `<div class="bloque"><h3>Cómo prepararlo</h3><ul>
-      <li><b>Medida:</b> 2 cucharadas soperas rasas (unos 10 g) por taza de 180 ml. Ajusta al gusto.</li>
-      <li><b>Agua:</b> caliente pero sin hervir (90 a 96 °C): deja reposar 30 segundos después de que suelte el hervor.</li>
-      ${grano ? '<li><b>Molienda:</b> según tu cafetera, con la tabla de arriba.</li>' : '<li><b>Filtro:</b> de papel o de tela, del tamaño de tu cafetera.</li>'}
-    </ul></div>`;
-  const guardarlo = `<div class="bloque"><h3>Cómo guardarlo</h3><ul>
-      <li>La bolsa trae válvula: deja salir los gases del tueste sin dejar entrar aire.</li>
-      <li>Saca el aire y cierra el zipper después de cada uso. Guárdalo en lugar fresco, seco y sin sol; no en el refrigerador.</li>
-      <li>Para el mejor sabor, consúmelo en las 3 a 4 semanas después de abrirlo.</li>
-    </ul></div>`;
+    ? `<div class="bloque aviso-prep"><div class="bloque-cab">${ico('molino', 'grande')}<div><h3>Necesitas moler</h3><p>Este café viene en grano entero. Muélelo justo antes de preparar para conservar el aroma. Si no tienes molino, elige la versión <b>molida</b>.</p></div></div>
+       <table class="tabla-molienda">${MOLIENDAS.map(([i, m, g]) => `<tr><td>${ico(i)}</td><td>${m}</td><td>${particulas(g)}</td><td>${g}</td></tr>`).join('')}</table></div>`
+    : `<div class="bloque aviso-prep"><div class="bloque-cab">${ico('filtro', 'grande')}<div><h3>Listo para usar · molienda media</h3><p>Ya viene molido; no necesitas molino. Úsalo en <b>cafetera de goteo con filtro</b> (de papel o de tela) o en filtro manual tipo V60 o Chemex. También funciona en café de olla.</p></div></div>
+       <ul class="metodos">${[['goteo', 'Goteo con filtro'], ['v60', 'V60 / Chemex'], ['olla', 'Café de olla']].map(([i, l]) => `<li>${ico(i)}<span>${l}</span></li>`).join('')}</ul>
+       <p class="nota-prep">${ico('espresso', 'chico')} Para espresso se necesita molienda fina: mejor pide el café en grano. ${ico('prensa', 'chico')} En prensa francesa puede quedar un poco de asiento en la taza.</p></div>`;
+  const receta = `<div class="bloque"><h3>Cómo prepararlo</h3>${pasos([
+      ['cuchara', 'Medida', '2 cucharadas soperas rasas (unos 10 g) por taza de 180 ml. Ajusta al gusto.'],
+      ['tetera', 'Agua a 90–96 °C', 'Caliente pero sin hervir: deja reposar 30 segundos después de que suelte el hervor.'],
+      grano ? ['molino', 'Molienda', 'Según tu cafetera, con la tabla de arriba.'] : ['filtro', 'Filtro', 'De papel o de tela, del tamaño de tu cafetera.']
+    ])}</div>`;
+  const guardarlo = `<div class="bloque"><h3>Cómo guardarlo</h3>${pasos([
+      ['valvula', 'Válvula', 'Deja salir los gases del tueste sin dejar entrar aire.'],
+      ['zipper', 'Cierra el zipper', 'Saca el aire y presiona firme después de cada uso.'],
+      ['sinsol', 'Fresco y sin sol', 'En la alacena, lejos de la estufa. No en el refrigerador.'],
+      ['calendario', '3 a 4 semanas', 'Para el mejor sabor, después de abrir la bolsa.']
+    ])}</div>`;
   return aviso + receta + guardarlo;
 }
 function prepBombon() {
-  return `<div class="bloque"><h3>Cómo disfrutarlos</h3><ul>
-      <li>El acompañante ideal para tu café, a cualquier hora.</li>
-      <li>Perfectos para regalar: vienen en celofán con sellado hermético.</li>
-      <li>Una vez abiertos, cierra bien la bolsa y guárdalos en lugar fresco y seco.</li>
-    </ul></div>`;
+  return `<div class="bloque"><h3>Cómo disfrutarlos</h3>${pasos([
+      ['taza', 'Con tu café', 'El acompañante ideal, a cualquier hora.'],
+      ['regalo', 'Para regalar', 'Vienen en celofán con sellado hermético.'],
+      ['sinsol', 'Ya abiertos', 'Cierra bien la bolsa y guárdalos en lugar fresco y seco.']
+    ])}</div>`;
 }
 function atributos(p) {
   const cafe = p.categoria !== 'Bombones';
@@ -458,7 +518,7 @@ function abrirFicha(sku, origen) {
         ? `<div class="cant"><button data-fd="-1" aria-label="Menos">−</button><b id="ficha-cant">${carrito[p.sku] || 0}</b><button data-fd="1" aria-label="Más">+</button></div>
            <button class="principal" id="ficha-agregar">${carrito[p.sku] ? 'Ver carrito' : 'Agregar al carrito'}</button>`
         : `<button class="principal" disabled>Agotado</button>`}</div>
-      ${t ? `<div class="bloque"><h3>${esc(t.titulo)}</h3><p>${esc(t.texto)}</p><p style="margin:6px 0 0"><b>Ideal para:</b></p><ul>${t.ideal.map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>` : ''}
+      ${t ? bloqueTueste(t) : ''}
       ${cafe ? prepCafe(p) : prepBombon()}
       <a class="link-dudas" href="${esc(dudas)}" target="_blank" rel="noopener">¿Dudas sobre este producto? Escríbenos por WhatsApp</a>
     </div>`;
