@@ -129,6 +129,50 @@ footer a{color:var(--verde)}
 .aviso a{color:var(--verde)}
 @media (min-width:720px){.btn-wa{display:inline-block}}
 @media (max-width:420px){.grid{grid-template-columns:1fr 1fr;gap:10px}.info{padding:10px}.info h3{font-size:16px}.desc{display:none}.agregar{padding:8px 10px;font-size:14px}.precio{font-size:16px}}
+/* Ficha de producto (clic en la foto o el nombre): foto con zoom, atributos, tueste y preparación */
+.foto[data-ver],.info h3[data-ver]{cursor:zoom-in}
+.info h3[data-ver]{cursor:pointer}
+.ver{background:none;border:0;padding:0;color:var(--verde);font-size:13px;font-weight:600;text-decoration:underline;cursor:pointer;align-self:flex-start}
+.ficha-velo{position:fixed;inset:0;background:rgba(20,12,8,.55);z-index:40;display:none;align-items:center;justify-content:center;padding:16px}
+.ficha-velo.abierto{display:flex}
+.ficha{background:var(--papel);border-radius:18px;width:min(940px,100%);max-height:calc(100vh - 32px);overflow:auto;position:relative;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 18px 60px rgba(0,0,0,.35)}
+.ficha-cerrar{position:absolute;top:10px;right:10px;z-index:3;width:38px;height:38px;border-radius:50%;border:0;background:#fff;color:var(--cafe);font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.ficha-foto{position:sticky;top:0;align-self:start;padding:16px}
+.zoom{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#efe4d4;cursor:zoom-in;touch-action:pan-y}
+.zoom img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s ease;transform-origin:50% 50%;user-select:none;-webkit-user-drag:none}
+.zoom.activo{cursor:zoom-out;touch-action:none}
+.zoom.activo img{transform:scale(2.5);transition:transform .25s ease,transform-origin .05s linear}
+.zoom .sin{position:absolute;inset:0;display:grid;place-items:center;font-family:Fraunces,serif;font-size:22px;color:var(--cafe2);text-align:center;padding:16px}
+.zoom-ctl{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;font-size:12.5px;color:var(--gris)}
+.zoom-ctl button{white-space:nowrap;flex:none;border:1px solid var(--linea);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--cafe);font-size:13px}
+.ficha-info{padding:22px 22px 22px 6px;display:flex;flex-direction:column;gap:12px}
+.ficha-info h2{margin:0;font-family:Fraunces,serif;font-size:28px;line-height:1.1;padding-right:40px}
+.ficha-info .precio{font-size:22px}
+.ficha-info .estado{font-size:13px;font-weight:600}
+.atributos{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.atributos li{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:6px 10px;font-size:13px;line-height:1.3}
+.atributos li b{display:block;font-size:10.5px;font-weight:600;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+.bloque{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:12px 14px}
+.bloque h3{margin:0 0 6px;font-family:Fraunces,serif;font-size:17px}
+.bloque p{margin:0 0 6px;font-size:14px;line-height:1.5;color:#4b3f37}
+.bloque ul{margin:4px 0 0;padding-left:18px;font-size:14px;line-height:1.5;color:#4b3f37}
+.bloque li{margin:2px 0}
+.aviso-prep{background:#fff5e0;border-color:#efd9a8}
+.tabla-molienda{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:4px}
+.tabla-molienda td{padding:5px 0;border-bottom:1px solid var(--linea)}
+.tabla-molienda td:last-child{text-align:right;font-weight:600;color:var(--verde)}
+.ficha-acciones{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ficha-acciones .principal{width:auto;flex:1;min-width:180px}
+.ficha-acciones .cant b{min-width:22px;text-align:center}
+.link-dudas{font-size:13px;color:var(--verde);font-weight:600}
+@media (max-width:720px){
+  .ficha-velo{padding:0;align-items:stretch}
+  .ficha{grid-template-columns:1fr;border-radius:0;max-height:100vh;height:100%}
+  .ficha-foto{position:relative;padding:12px 12px 0}
+  .ficha-info{padding:14px 16px 28px}
+  .ficha-info h2{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){.zoom img,.zoom.activo img{transition:none}}
 </style>
 </head>
 <body>
@@ -167,6 +211,10 @@ footer a{color:var(--verde)}
   <div class="panel-cuerpo" id="cuerpo"></div>
   <div class="panel-pie" id="pie"></div>
 </aside>
+
+<div class="ficha-velo" id="ficha-velo" aria-hidden="true">
+  <div class="ficha" id="ficha" role="dialog" aria-modal="true" aria-labelledby="ficha-titulo" tabindex="-1"></div>
+</div>
 
 <script>
 /* ===== Configuración ===== */
@@ -315,20 +363,149 @@ function pintarLista() {
     const badge = !p.hay ? '<span class="badge agotado">Agotado</span>' : p.ultimas ? '<span class="badge ultimas">Últimas piezas</span>' : '';
     const titulo = p.categoria === 'Bombones' ? p.producto : `${p.presentacion} ${p.tamano}`;
     return `<article class="card">
-      <div class="foto${p.imagen ? ' esperando' : ''}"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(titulo)}</div></div>${p.imagen ? `<img loading="lazy" src="${esc(p.imagen)}" alt="${esc(p.producto + ' ' + p.tueste)}" onload="this.parentNode.classList.remove('esperando');this.parentNode.classList.add('lista')" onerror="this.parentNode.classList.remove('esperando');this.remove()">` : ''}${badge}</div>
+      <div class="foto${p.imagen ? ' esperando' : ''}" data-ver="${esc(p.sku)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(titulo)}"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(titulo)}</div></div>${p.imagen ? `<img loading="lazy" src="${esc(p.imagen)}" alt="${esc(p.producto + ' ' + p.tueste)}" onload="this.parentNode.classList.remove('esperando');this.parentNode.classList.add('lista')" onerror="this.parentNode.classList.remove('esperando');this.remove()">` : ''}${badge}</div>
       <div class="info">
         <div class="meta">${esc([p.proveedor, p.tueste, p.origen].filter(Boolean).join(' · '))}</div>
-        <h3>${esc(titulo)}</h3>
+        <h3 data-ver="${esc(p.sku)}">${esc(titulo)}</h3>
         <p class="desc">${esc(p.descripcion)}</p>
+        <button class="ver" data-ver="${esc(p.sku)}">Ver detalles</button>
         <div class="pie"><span class="precio">${pesos(p.precio)}</span>
           <button class="agregar" data-sku="${esc(p.sku)}" ${p.hay ? '' : 'disabled'}>${p.hay ? (carrito[p.sku] ? `En carrito (${carrito[p.sku]})` : 'Agregar') : 'Agotado'}</button></div>
       </div></article>`;
   }).join('');
 }
 $('#lista').addEventListener('click', e => {
+  const v = e.target.closest('[data-ver]'); if (v) { abrirFicha(v.dataset.ver, v); return; }
   const b = e.target.closest('.agregar'); if (!b || b.disabled) return;
   cambiar(b.dataset.sku, +1);
   b.textContent = `En carrito (${carrito[b.dataset.sku]})`;
+});
+
+/* ===== Ficha de producto =====
+   Textos por tueste y por molienda: edítalos aquí. Si el catálogo (pestaña Tienda) trae «descripcion», se muestra arriba. */
+const TUESTES = {
+  Americano: {
+    titulo: 'Tueste Americano · suave',
+    texto: 'Tueste más claro: sabor suave y redondo, con menos amargor y más dulzor natural. Se disfruta solo, sin leche, y en taza grande.',
+    ideal: ['Cafetera de goteo con filtro', 'Filtro manual (V60, Chemex)', 'Prensa francesa', 'Café de olla']
+  },
+  Europeo: {
+    titulo: 'Tueste Europeo · intenso',
+    texto: 'Tueste más oscuro: más cuerpo y sabor intenso, con amargor agradable. Aguanta bien la leche, por eso es el favorito para capuchino y latte.',
+    ideal: ['Café con leche, capuchino o latte', 'Cafetera italiana (moka)', 'Espresso (en grano, molido fino)', 'Cafetera de goteo si te gusta cargado']
+  }
+};
+const MOLIENDAS = [['Espresso', 'Fina'], ['Cafetera italiana (moka)', 'Fina a media'], ['Goteo y filtro (V60, Chemex)', 'Media'], ['Café de olla', 'Media a gruesa'], ['Prensa francesa', 'Gruesa']];
+
+function prepCafe(p) {
+  const grano = /grano/i.test(p.presentacion || '');
+  const aviso = grano
+    ? `<div class="bloque aviso-prep"><h3>Necesitas moler</h3><p>Este café viene en grano entero. Muélelo justo antes de preparar para conservar el aroma. Si no tienes molino, elige la versión <b>molida</b>.</p>
+       <table class="tabla-molienda">${MOLIENDAS.map(([m, g]) => `<tr><td>${m}</td><td>${g}</td></tr>`).join('')}</table></div>`
+    : `<div class="bloque aviso-prep"><h3>Listo para usar · molienda media</h3><p>Ya viene molido; no necesitas molino. Úsalo en <b>cafetera de goteo con filtro</b> (de papel o de tela) o en filtro manual tipo V60 o Chemex. También funciona en café de olla.</p>
+       <ul><li>Para espresso se necesita molienda fina: mejor pide el café en grano.</li><li>En prensa francesa puede quedar un poco de asiento en la taza.</li></ul></div>`;
+  const receta = `<div class="bloque"><h3>Cómo prepararlo</h3><ul>
+      <li><b>Medida:</b> 2 cucharadas soperas rasas (unos 10 g) por taza de 180 ml. Ajusta al gusto.</li>
+      <li><b>Agua:</b> caliente pero sin hervir (90 a 96 °C): deja reposar 30 segundos después de que suelte el hervor.</li>
+      ${grano ? '<li><b>Molienda:</b> según tu cafetera, con la tabla de arriba.</li>' : '<li><b>Filtro:</b> de papel o de tela, del tamaño de tu cafetera.</li>'}
+    </ul></div>`;
+  const guardarlo = `<div class="bloque"><h3>Cómo guardarlo</h3><ul>
+      <li>La bolsa trae válvula: deja salir los gases del tueste sin dejar entrar aire.</li>
+      <li>Saca el aire y cierra el zipper después de cada uso. Guárdalo en lugar fresco, seco y sin sol; no en el refrigerador.</li>
+      <li>Para el mejor sabor, consúmelo en las 3 a 4 semanas después de abrirlo.</li>
+    </ul></div>`;
+  return aviso + receta + guardarlo;
+}
+function prepBombon() {
+  return `<div class="bloque"><h3>Cómo disfrutarlos</h3><ul>
+      <li>El acompañante ideal para tu café, a cualquier hora.</li>
+      <li>Perfectos para regalar: vienen en celofán con sellado hermético.</li>
+      <li>Una vez abiertos, cierra bien la bolsa y guárdalos en lugar fresco y seco.</li>
+    </ul></div>`;
+}
+function atributos(p) {
+  const cafe = p.categoria !== 'Bombones';
+  const a = [
+    ['Marca', p.proveedor], ['Origen', p.origen], cafe && ['Tueste', p.tueste],
+    cafe && ['Presentación', /grano/i.test(p.presentacion || '') ? 'En grano entero' : p.presentacion ? 'Molido · molienda media' : ''],
+    ['Contenido', cafe ? p.tamano : (p.tamano || p.producto)],
+    ['Empaque', cafe ? 'Bolsa con válvula y cierre zipper' : 'Celofán con sellado hermético']
+  ].filter(x => x && x[1]);
+  return `<ul class="atributos">${a.map(([k, v]) => `<li><b>${esc(k)}</b>${esc(v)}</li>`).join('')}</ul>`;
+}
+
+let fichaSku = null, fichaOrigen = null;
+function abrirFicha(sku, origen) {
+  const p = catalogo.find(x => x.sku === sku); if (!p) return;
+  fichaSku = sku; fichaOrigen = origen || null;
+  const cafe = p.categoria !== 'Bombones';
+  const titulo = cafe ? `${p.presentacion} ${p.tamano}` : p.producto;
+  const t = cafe && TUESTES[p.tueste];
+  const estado = !p.hay ? '<span class="estado" style="color:var(--rojo)">Agotado por ahora</span>' : p.ultimas ? '<span class="estado" style="color:var(--ambar)">Últimas piezas</span>' : '<span class="estado" style="color:var(--verde)">Disponible</span>';
+  const dudas = `${whatsapp}${whatsapp.indexOf('?') < 0 ? '?' : '&'}text=${encodeURIComponent('Hola, tengo una duda sobre ' + nombreCorto(p))}`;
+  $('#ficha').innerHTML = `<button class="ficha-cerrar" id="ficha-cerrar" aria-label="Cerrar">×</button>
+    <div class="ficha-foto">
+      <div class="zoom" id="zoom">${p.imagen ? `<img src="${esc(p.imagen)}" alt="${esc(nombreCorto(p))}" draggable="false">` : `<div class="sin">${esc(titulo)}</div>`}</div>
+      ${p.imagen ? `<div class="zoom-ctl"><span id="zoom-ayuda">Toca la foto para acercar y muévete para ver los detalles.</span><button id="zoom-btn" aria-pressed="false">Acercar +</button></div>` : ''}
+    </div>
+    <div class="ficha-info">
+      <div class="meta">${esc([p.proveedor, p.tueste, p.origen].filter(Boolean).join(' · '))}</div>
+      <h2 id="ficha-titulo">${esc(titulo)}</h2>
+      <div><span class="precio">${pesos(p.precio)}</span> &nbsp; ${estado}</div>
+      ${p.descripcion ? `<p class="desc" style="font-size:15px;flex:none">${esc(p.descripcion)}</p>` : ''}
+      ${atributos(p)}
+      <div class="ficha-acciones">${p.hay
+        ? `<div class="cant"><button data-fd="-1" aria-label="Menos">−</button><b id="ficha-cant">${carrito[p.sku] || 0}</b><button data-fd="1" aria-label="Más">+</button></div>
+           <button class="principal" id="ficha-agregar">${carrito[p.sku] ? 'Ver carrito' : 'Agregar al carrito'}</button>`
+        : `<button class="principal" disabled>Agotado</button>`}</div>
+      ${t ? `<div class="bloque"><h3>${esc(t.titulo)}</h3><p>${esc(t.texto)}</p><p style="margin:6px 0 0"><b>Ideal para:</b></p><ul>${t.ideal.map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>` : ''}
+      ${cafe ? prepCafe(p) : prepBombon()}
+      <a class="link-dudas" href="${esc(dudas)}" target="_blank" rel="noopener">¿Dudas sobre este producto? Escríbenos por WhatsApp</a>
+    </div>`;
+  $('#ficha-velo').classList.add('abierto'); $('#ficha-velo').setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  $('#ficha').scrollTop = 0; $('#ficha').focus();
+  prepararZoom();
+}
+function cerrarFicha() {
+  if (!fichaSku) return;
+  $('#ficha-velo').classList.remove('abierto'); $('#ficha-velo').setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = ''; fichaSku = null;
+  pintarLista();
+  if (fichaOrigen && document.body.contains(fichaOrigen)) fichaOrigen.focus();
+}
+function prepararZoom() {
+  const z = $('#zoom'), img = z && z.querySelector('img'), btn = $('#zoom-btn');
+  if (!img) return;
+  const punto = (e) => { const r = z.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)), y = Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100));
+    img.style.transformOrigin = `${x}% ${y}%`; };
+  const poner = (on, e) => { z.classList.toggle('activo', on); if (btn) { btn.textContent = on ? 'Alejar −' : 'Acercar +'; btn.setAttribute('aria-pressed', on); }
+    if (on && e) punto(e); if (!on) img.style.transformOrigin = '50% 50%'; };
+  let arrastre = false, movido = false;
+  z.addEventListener('pointerdown', e => { arrastre = true; movido = false; });
+  z.addEventListener('pointermove', e => {
+    if (!z.classList.contains('activo')) return;
+    if (e.pointerType === 'mouse' || arrastre) { movido = true; punto(e); }
+  });
+  z.addEventListener('pointerup', e => { arrastre = false; });
+  z.addEventListener('click', e => { if (z.classList.contains('activo') && movido && e.pointerType !== 'mouse') return; poner(!z.classList.contains('activo'), e); });
+  if (btn) btn.onclick = () => poner(!z.classList.contains('activo'));
+}
+$('#ficha-velo').addEventListener('click', e => {
+  if (e.target.id === 'ficha-velo' || e.target.closest('#ficha-cerrar')) { cerrarFicha(); return; }
+  const d = e.target.closest('[data-fd]');
+  if (d && fichaSku) { cambiar(fichaSku, Number(d.dataset.fd)); $('#ficha-cant').textContent = carrito[fichaSku] || 0;
+    $('#ficha-agregar').textContent = carrito[fichaSku] ? 'Ver carrito' : 'Agregar al carrito'; return; }
+  if (e.target.closest('#ficha-agregar') && fichaSku) {
+    const sku = fichaSku;
+    if (!carrito[sku]) cambiar(sku, +1);
+    cerrarFicha(); abrir('carrito');
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && fichaSku) { cerrarFicha(); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.foto[data-ver]')) { e.preventDefault(); abrirFicha(e.target.dataset.ver, e.target); }
 });
 
 /* ===== Carrito ===== */
