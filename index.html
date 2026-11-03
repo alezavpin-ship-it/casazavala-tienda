@@ -522,13 +522,15 @@ function abrirFicha(sku, origen) {
       ${cafe ? prepCafe(p) : prepBombon()}
       <a class="link-dudas" href="${esc(dudas)}" target="_blank" rel="noopener">¿Dudas sobre este producto? Escríbenos por WhatsApp</a>
     </div>`;
+  marcarCapa('ficha');
   $('#ficha-velo').classList.add('abierto'); $('#ficha-velo').setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
   $('#ficha').scrollTop = 0; $('#ficha').focus();
   prepararZoom();
 }
-function cerrarFicha() {
+function cerrarFicha(sinHistorial) {
   if (!fichaSku) return;
+  if (!sinHistorial) quitarCapa('ficha');
   $('#ficha-velo').classList.remove('abierto'); $('#ficha-velo').setAttribute('aria-hidden', 'true');
   document.body.style.overflow = ''; fichaSku = null;
   pintarLista();
@@ -560,7 +562,7 @@ $('#ficha-velo').addEventListener('click', e => {
   if (e.target.closest('#ficha-agregar') && fichaSku) {
     const sku = fichaSku;
     if (!carrito[sku]) cambiar(sku, +1);
-    cerrarFicha(); abrir('carrito');
+    cerrarFicha(true); abrir('carrito');
   }
 });
 document.addEventListener('keydown', e => {
@@ -578,8 +580,8 @@ function cambiar(sku, delta) {
 function lineas() { return Object.entries(carrito).map(([sku, c]) => ({p: catalogo.find(x => x.sku === sku), c})).filter(l => l.p); }
 function pintarContador() { $('#num-carrito').textContent = Object.values(carrito).reduce((a, b) => a + b, 0); }
 let vista = 'carrito';
-function abrir(v) { vista = v || 'carrito'; $('#panel').classList.add('abierto'); $('#velo').classList.add('abierto'); $('#panel').setAttribute('aria-hidden', 'false'); pintarPanel(); }
-function cerrar() { $('#panel').classList.remove('abierto'); $('#velo').classList.remove('abierto'); $('#panel').setAttribute('aria-hidden', 'true'); pintarLista(); }
+function abrir(v) { vista = v || 'carrito'; marcarCapa('panel'); $('#panel').classList.add('abierto'); $('#velo').classList.add('abierto'); $('#panel').setAttribute('aria-hidden', 'false'); pintarPanel(); }
+function cerrar(sinHistorial) { if (sinHistorial !== true) quitarCapa('panel'); $('#panel').classList.remove('abierto'); $('#velo').classList.remove('abierto'); $('#panel').setAttribute('aria-hidden', 'true'); pintarLista(); }
 $('#abrir-carrito').onclick = () => abrir('carrito');
 $('#cerrar').onclick = cerrar; $('#velo').onclick = cerrar;
 function pintarPanel() { vista === 'carrito' ? pintarCarrito() : vista === 'datos' ? pintarDatos() : null; }
@@ -677,6 +679,21 @@ function pintarGracias(d, nacional) {
     `<a class="boton-link wa" href="${esc(d.whatsapp || whatsapp)}" target="_blank" rel="noopener">Confirmar por WhatsApp</a>
      <button class="secundario" onclick="cerrar()">Seguir comprando</button>`;
 }
+
+/* ===== Botón «atrás» del celular =====
+   Abrir la ficha o el carrito agrega un paso al historial; «atrás» los cierra y regresa a los productos
+   en lugar de salir de la página. Cerrar con la ×, Esc o el fondo también consume ese paso. */
+function marcarCapa(capa) {
+  try { if (history.state && history.state.cz) history.replaceState({cz: capa}, ''); else history.pushState({cz: capa}, ''); } catch (e) {}
+}
+function quitarCapa(capa) {
+  try { if (history.state && history.state.cz === capa) history.back(); } catch (e) {}
+}
+window.addEventListener('popstate', () => {
+  if (fichaSku) cerrarFicha(true);
+  if ($('#panel').classList.contains('abierto')) cerrar(true);
+});
+try { if (history.state && history.state.cz) history.replaceState(null, ''); } catch (e) {}
 
 cargarCatalogo(); pintarContador();
 </script>
