@@ -119,15 +119,14 @@ textarea{min-height:64px;resize:vertical}
 .pagar{background:var(--ambar);color:#fff}.wa{background:#1f8f4e;color:#fff}
 /* Cómo pedir: video explicativo */
 .link-pedir{display:inline-block;margin-top:8px;font-size:clamp(12.5px,3.6vw,15px);font-weight:600;color:var(--verde)}
-.como-pedir{margin-top:44px;padding:clamp(18px,4vw,32px);background:var(--papel);border:1px solid var(--linea);border-radius:18px;display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);column-gap:clamp(18px,4vw,40px);row-gap:12px;grid-template-areas:"video titulo" "video texto";grid-template-rows:1fr auto;scroll-margin-top:90px}
-.como-pedir h2{grid-area:titulo;align-self:end}
-.como-texto{grid-area:texto;align-self:start;padding-bottom:40px}
-.como-pedir video{grid-area:video;width:100%;aspect-ratio:9/16;display:block;border-radius:16px;background:var(--verde);box-shadow:0 10px 30px rgba(30,78,52,.25)}
-.como-pedir h2{font-family:Fraunces,serif;font-size:clamp(24px,5vw,34px);line-height:1.1;margin:0 0 8px;color:var(--verde)}
-.como-pedir p{margin:0 0 12px;color:var(--gris);line-height:1.5}
-.como-pedir ol{margin:0 0 14px;padding-left:22px;display:grid;gap:6px;line-height:1.45}
-.como-pedir ol li::marker{color:var(--verde);font-weight:600}
-@media (max-width:640px){.como-pedir{grid-template-columns:1fr;grid-template-areas:"titulo" "video" "texto";grid-template-rows:auto}.como-pedir video{max-width:300px;margin:0 auto}.como-texto{padding-bottom:0}}
+/* Cómo pedir: ventana aparte; el video se descarga solo al tocar «Ver video» */
+.como-video{position:relative;display:block;width:100%;max-width:340px;margin:0 auto;aspect-ratio:9/16;border:0;padding:0;border-radius:16px;overflow:hidden;background:var(--verde);cursor:pointer;box-shadow:0 10px 30px rgba(30,78,52,.25)}
+.como-video img,.como-video video{width:100%;height:100%;object-fit:cover;display:block}
+.como-video .play{position:absolute;inset:0;display:grid;place-items:center;align-content:end;gap:8px;padding-bottom:12%;color:#fff;font-weight:600;font-size:15px;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.5))}
+@media (max-width:720px){.como-video{max-width:230px}}
+.como-video .play svg{width:64px;height:64px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
+.como-pasos{margin:0;padding-left:22px;display:grid;gap:8px;line-height:1.45;font-size:15px}
+.como-pasos li::marker{color:var(--verde);font-weight:600}
 .redes{display:flex;justify-content:center;align-items:center;gap:18px;padding:22px 16px 0}
 .redes a{display:block;width:40px;height:40px;border-radius:12px;transition:transform .15s}
 .redes a:hover,.redes a:focus-visible{transform:translateY(-2px)}
@@ -218,30 +217,13 @@ footer a{color:var(--verde)}
   <div class="hero-texto">
   <h1>Selecciona tu pedido:</h1>
   <p>En grano o molido, tueste americano o europeo. Elige, arma tu carrito. Envíos locales en Monterrey y área metropolitana. "Si tienes dudas, <a class="link-wa" id="dudas-wa" href="#" target="_blank" rel="noopener">mándanos un WhatsApp</a>".</p>
-  <a class="link-pedir" href="#como-pedir">¿Primera vez? Mira cómo pedir ▸</a>
+  <a class="link-pedir" href="#como-pedir" id="link-como-pedir">¿Primera vez? Mira cómo pedir ▸</a>
   </div>
 </section>
 
 <nav class="filtros" id="filtros" aria-label="Filtros"></nav>
 <main>
   <div id="lista" class="grid" aria-busy="true"><span class="cargando" style="position:absolute;left:-9999px">Cargando catálogo…</span><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article><article class="card skel" aria-hidden="true"><div class="foto esperando"></div><div class="info"><div class="esq m"></div><div class="esq t"></div><div class="esq c"></div><div class="pie"><div class="esq p"></div><div class="esq b"></div></div></div></article></div>
-  <section class="como-pedir" id="como-pedir" aria-labelledby="titulo-como-pedir">
-    <video controls playsinline preload="none" poster="video/como-pedir.webp" aria-label="Video: cómo hacer tu pedido en Casa Zavala">
-      <source src="video/como-pedir.mp4" type="video/mp4">
-    </video>
-    <h2 id="titulo-como-pedir">¿Cómo pedir?</h2>
-    <div class="como-texto">
-      <p>Mira el video de un minuto o sigue estos pasos:</p>
-      <ol>
-        <li>Filtra por tueste, molienda y tamaño.</li>
-        <li>Toca <b>Ver detalles</b> para conocer el café: tueste, preparación y cómo guardarlo.</li>
-        <li>Agrégalo al carrito y toca <b>Continuar</b>.</li>
-        <li>Llena tus datos de entrega y toca <b>Hacer pedido</b>.</li>
-        <li>Paga con tarjeta, o confirma por WhatsApp para pagar contra entrega o por transferencia.</li>
-      </ol>
-      <p>¿Dudas o aclaraciones? <a class="link-wa" href="https://wa.me/528115088658" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>.</p>
-    </div>
-  </section>
 </main>
 <nav class="redes" aria-label="Redes sociales de Casa Zavala">
   <a href="https://www.instagram.com/casazavalamty" target="_blank" rel="noopener" aria-label="Instagram @casazavalamty" title="Instagram @casazavalamty"><img src="img/redes/instagram.webp" alt="Instagram" width="40" height="40" loading="lazy"></a>
@@ -559,6 +541,8 @@ function abrirFicha(sku, origen) {
 }
 function cerrarFicha(sinHistorial) {
   if (!fichaSku) return;
+  $('#ficha').querySelectorAll('video').forEach(v => { v.pause(); v.removeAttribute('src'); v.load(); });
+  $('#ficha').innerHTML = '';
   if (!sinHistorial) quitarCapa('ficha');
   $('#ficha-velo').classList.remove('abierto'); $('#ficha-velo').setAttribute('aria-hidden', 'true');
   document.body.style.overflow = ''; fichaSku = null;
@@ -709,6 +693,43 @@ function pintarGracias(d, nacional) {
      <button class="secundario" onclick="cerrar()">Seguir comprando</button>`;
 }
 
+/* ===== ¿Cómo pedir? (ventana aparte) =====
+   No se carga nada al abrir la tienda. Al abrir la ventana solo baja la portada (15 KB);
+   el video (2 MB) se descarga hasta que el cliente toca «Ver video». */
+const COMO = '__como-pedir';
+function abrirComoPedir(origen) {
+  fichaSku = COMO; fichaOrigen = origen || null;
+  $('#ficha').innerHTML = `<button class="ficha-cerrar" id="ficha-cerrar" aria-label="Cerrar">×</button>
+    <div class="ficha-foto">
+      <button class="como-video" id="como-video" aria-label="Ver video de un minuto: cómo hacer tu pedido">
+        <img src="video/como-pedir.webp" alt="" width="720" height="1280">
+        <span class="play"><svg viewBox="0 0 74 74" aria-hidden="true"><circle cx="37" cy="37" r="36" fill="rgba(255,255,255,.92)"/><path d="M30 23l22 14-22 14z" fill="#1e4e34"/></svg>Ver video · 1 min</span>
+      </button>
+    </div>
+    <div class="ficha-info">
+      <h2 id="ficha-titulo">¿Cómo pedir?</h2>
+      <p class="desc" style="font-size:15px;flex:none">Mira el video de un minuto o sigue estos pasos:</p>
+      <ol class="como-pasos">
+        <li>Filtra por tueste, molienda y tamaño.</li>
+        <li>Toca <b>Ver detalles</b> para conocer el café: tueste, preparación y cómo guardarlo.</li>
+        <li>Agrégalo al carrito y toca <b>Continuar</b>.</li>
+        <li>Llena tus datos de entrega y toca <b>Hacer pedido</b>.</li>
+        <li>Paga con tarjeta, o confirma por WhatsApp para pagar contra entrega o por transferencia.</li>
+      </ol>
+      <button class="principal" id="como-ver-productos">Ver productos</button>
+      <a class="link-dudas" href="${esc(whatsapp)}" target="_blank" rel="noopener">¿Dudas o aclaraciones? Escríbenos por WhatsApp</a>
+    </div>`;
+  marcarCapa('ficha');
+  $('#ficha-velo').classList.add('abierto'); $('#ficha-velo').setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  $('#ficha').scrollTop = 0; $('#ficha').focus();
+  $('#como-video').onclick = function () {
+    this.outerHTML = `<div class="como-video"><video controls autoplay playsinline preload="auto" poster="video/como-pedir.webp" aria-label="Video: cómo hacer tu pedido en Casa Zavala"><source src="video/como-pedir.mp4" type="video/mp4"></video></div>`;
+  };
+  $('#como-ver-productos').onclick = () => cerrarFicha();
+}
+$('#link-como-pedir').addEventListener('click', e => { e.preventDefault(); abrirComoPedir(e.currentTarget); });
+
 /* ===== Botón «atrás» del celular =====
    Abrir la ficha o el carrito agrega un paso al historial; «atrás» los cierra y regresa a los productos
    en lugar de salir de la página. Cerrar con la ×, Esc o el fondo también consume ese paso. */
@@ -725,6 +746,8 @@ window.addEventListener('popstate', () => {
 try { if (history.state && history.state.cz) history.replaceState(null, ''); } catch (e) {}
 
 cargarCatalogo(); pintarContador();
+function hashComoPedir() { if (location.hash !== '#como-pedir') return; try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} if (fichaSku !== COMO) abrirComoPedir(); }
+window.addEventListener('hashchange', hashComoPedir); hashComoPedir();
 </script>
 </body>
 </html>
