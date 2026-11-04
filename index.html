@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://lh3.googleusercontent.com https://drive.google.com; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://lh3.googleusercontent.com https://drive.google.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Casa Zavala · Café de Veracruz</title>
 <link rel="icon" type="image/png" href="favicon.png">
@@ -79,7 +79,7 @@ main{max-width:1120px;margin:0 auto;padding:0 16px 120px}
 .desc{font-size:13.5px;color:#5b5048;margin:0;flex:1}
 .pie{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
 .precio{font-weight:600;font-size:18px}
-.agregar{background:var(--verde);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:600;cursor:pointer}
+.agregar{background:var(--rojo);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:600;cursor:pointer}
 .agregar:disabled{background:#b9ad9f;cursor:not-allowed}
 .vacio,.cargando{padding:40px 0;text-align:center;color:var(--gris)}
 /* Carrito */
@@ -100,7 +100,7 @@ main{max-width:1120px;margin:0 auto;padding:0 16px 120px}
 .panel-pie{border-top:1px solid var(--linea);padding:14px 16px;background:#fff}
 .total{display:flex;justify-content:space-between;font-weight:600;font-size:17px;margin-bottom:4px}
 .nota{font-size:12px;color:var(--gris);margin:0 0 10px}
-.principal{width:100%;background:var(--verde);color:#fff;border:0;border-radius:12px;padding:13px;font-weight:600;font-size:16px;cursor:pointer}
+.principal{width:100%;background:var(--rojo);color:#fff;border:0;border-radius:12px;padding:13px;font-weight:600;font-size:16px;cursor:pointer}
 .sub-boton{display:block;font-size:12px;font-weight:400;opacity:.85;margin-top:2px}
 .principal:disabled{opacity:.6;cursor:wait}
 .secundario{width:100%;background:none;border:1px solid var(--linea);border-radius:12px;padding:11px;margin-top:8px;cursor:pointer;color:var(--cafe)}
@@ -200,6 +200,82 @@ footer a{color:var(--verde)}
   .ficha-info h2{font-size:24px}
 }
 @media (prefers-reduced-motion:reduce){.zoom img,.zoom.activo img{transition:none}}
+
+/* ====== Prueba DEV: diseño sencillo ====== */
+[hidden]{display:none!important}
+@media (max-width:520px){.marca small{display:none}}
+/* Hero */
+.hero2{background:radial-gradient(120% 140% at 85% 30%,#2f6b48 0%,#1e4e34 45%,#163a27 100%);color:var(--crema);overflow:hidden}
+.hero2-in{max-width:1120px;margin:0 auto;padding:clamp(28px,6vw,64px) 16px clamp(28px,5vw,56px);display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(16px,4vw,48px);align-items:center}
+.eyebrow{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ambar);margin-bottom:12px}
+.hero2 h1{font-family:Fraunces,serif;font-size:clamp(30px,5.4vw,56px);line-height:1.04;margin:0 0 14px;font-weight:700;letter-spacing:-.01em}
+.hero2 p{margin:0 0 22px;font-size:clamp(15px,2.2vw,18px);line-height:1.5;color:rgba(243,235,224,.85);max-width:460px}
+.hero2-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.btn-hero{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border-radius:999px;background:var(--ambar);color:#1e140e;font-weight:700;text-decoration:none;font-size:16px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.btn-hero.sec{background:transparent;color:var(--crema);border:1.5px solid rgba(243,235,224,.5);box-shadow:none}
+.confianza{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:rgba(243,235,224,.9)}
+.confianza li,.confianza a{display:flex;align-items:center;gap:7px;text-decoration:none;color:inherit}
+.confianza svg{width:20px;height:20px;fill:none;stroke:var(--ambar);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hero2-img{position:relative;aspect-ratio:1/1;max-width:440px;width:100%;justify-self:center}
+.hero2-circulo{position:absolute;inset:6%;border-radius:50%;background:var(--crema);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.hero2-bolsa{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;clip-path:circle(44% at 50% 50%)}
+.hero2-sello{position:absolute!important;width:clamp(76px,22%,108px)!important;height:clamp(76px,22%,108px)!important;left:-2%;bottom:6%;margin:0!important}
+.titulo-seccion{max-width:1120px;margin:0 auto;padding:28px 16px 0;font-family:Fraunces,serif;font-size:clamp(24px,4vw,32px);color:var(--cafe);scroll-margin-top:80px}
+/* Filtros sencillos */
+.filtros{flex-direction:column;align-items:stretch;gap:10px}
+.tabs .grupo{gap:8px}.tabs .chip{font-size:16px;padding:10px 20px;font-weight:600}
+.fila-filtros{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}
+.fila-filtros .grupo>span{font-size:13px;font-weight:600;color:var(--cafe2)}
+.fila-filtros .chip{padding:7px 12px;font-size:14px}
+/* Tarjetas: foto del producto, nombre, sabor, precio */
+.grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.card{border-radius:18px;transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:0 10px 28px rgba(43,29,21,.12);transform:translateY(-2px)}
+.foto{background:#f6efe4}
+.foto>img{object-fit:contain;padding:6%}
+.lupa{position:absolute;left:10px;bottom:10px;background:rgba(255,255,255,.92);color:var(--cafe2);font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.info{gap:6px;padding:14px 14px 16px}
+.info h3{font-size:18px;cursor:pointer}
+.sabor{align-self:flex-start;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:#efe6d8;color:var(--cafe2)}
+.sabor.suave{background:#e7f0ea;color:var(--verde)}.sabor.intenso{background:#f3e3d3;color:#7a3b16}
+.info .precio{font-size:22px;font-weight:700;margin-top:2px}
+.info .agregar{width:100%;min-height:46px;font-size:16px;border-radius:12px;margin-top:4px}
+/* Ficha: miniaturas y acordeones */
+.miniaturas{display:flex;gap:8px;margin-top:10px}
+.mini-foto{flex:1;display:flex;align-items:center;gap:8px;border:1.5px solid var(--linea);background:#fff;border-radius:12px;padding:6px;font-size:13px;cursor:pointer;color:var(--cafe)}
+.mini-foto img{width:42px;height:42px;object-fit:cover;border-radius:8px}
+.mini-foto.activa{border-color:var(--verde);color:var(--verde);font-weight:600}
+.acordeon{padding:0}
+.acordeon>summary{list-style:none;cursor:pointer;padding:14px;font-family:Fraunces,serif;font-size:17px;display:flex;justify-content:space-between;align-items:center}
+.acordeon>summary::-webkit-details-marker,.sub-acordeon>summary::-webkit-details-marker,.mas>summary::-webkit-details-marker{display:none}
+.acordeon>summary::after,.sub-acordeon>summary::after,.mas>summary::after{content:'+';font-family:Inter,sans-serif;font-size:22px;color:var(--verde);line-height:1}
+.acordeon[open]>summary::after,.sub-acordeon[open]>summary::after,.mas[open]>summary::after{content:'−'}
+.acordeon>.pasos{padding:0 14px 14px;margin:0}
+.sub-acordeon{margin-top:10px;border-top:1px solid var(--linea)}
+.sub-acordeon>summary{list-style:none;cursor:pointer;padding:10px 0 4px;font-weight:600;font-size:14px;color:var(--verde);display:flex;justify-content:space-between}
+/* Formulario */
+.opc{font-weight:400;color:var(--gris)}
+.cp-estado{margin:-4px 0 0;font-size:13.5px;color:var(--gris);min-height:0}
+.cp-estado:empty{display:none}
+.cp-estado.ok{color:var(--verde)}
+.cp-estado.aviso-cp{background:#fff5e0;border:1px solid #efd9a8;border-radius:10px;padding:9px 11px;color:#5b4320}
+#zona-colonia{display:grid;gap:10px}
+.mas{border:1px solid var(--linea);border-radius:12px;padding:0 12px;background:#fff}
+.mas>summary{list-style:none;cursor:pointer;padding:11px 0;font-size:13.5px;font-weight:500;display:flex;justify-content:space-between;gap:10px}
+.mas[open]{padding-bottom:12px}.mas label{margin-top:8px}
+input,select,textarea{font-size:16px;min-height:46px}
+textarea{min-height:64px}
+@media (max-width:720px){
+  .hero2-in{grid-template-columns:1fr;text-align:left}
+  .hero2-img{order:-1;max-width:220px}
+  .btn-hero{flex:1}
+}
+@media (max-width:420px){.grid{grid-template-columns:1fr 1fr;gap:10px}.info{padding:10px 10px 12px}.info h3{font-size:15px}.info .precio{font-size:18px}.info .agregar{min-height:42px;font-size:15px}.lupa{display:none}}
+/* Tamaño dentro del nombre y precio de lista */
+.tam{display:inline-block;font-family:Inter,system-ui,sans-serif;font-size:.72em;font-weight:700;color:#9a5a12;background:#fbecd2;border-radius:6px;padding:1px 7px;margin-left:2px;vertical-align:.12em;white-space:nowrap}
+.precio-lista{display:block;font-size:12px;color:var(--gris);margin-top:-2px}
+.precio-lista s{text-decoration-thickness:1px}
+.ficha-precio .precio-lista{margin-top:2px;font-size:13px}
 </style>
 </head>
 <body>
@@ -207,19 +283,32 @@ footer a{color:var(--verde)}
 <header>
   <div class="barra">
     <div class="marca"><img src="logo.webp" alt="" width="48" height="48"><div>Casa Zavala<small>Café de origen · "Servido con orgullo" </small></div></div>
-    <a class="btn-wa" id="link-wa" href="#" target="_blank" rel="noopener">Contactanos: WhatsApp</a>
+    <a class="btn-wa" id="link-wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
     <button class="btn-carrito" id="abrir-carrito" aria-label="Abrir carrito">Mi Carrito <b id="num-carrito">0</b></button>
   </div>
 </header>
 
-<section class="hero">
-  <div class="logo-temp" id="logo-temp"><img class="hero-logo" src="logo.webp" alt="Casa Zavala · Café de origen · Est. 2026" width="132" height="132"></div>
-  <div class="hero-texto">
-  <h1>Selecciona tu pedido:</h1>
-  <p>En grano o molido, tueste americano o europeo. Elige, arma tu carrito. Envíos locales en Monterrey y área metropolitana. "Si tienes dudas, <a class="link-wa" id="dudas-wa" href="#" target="_blank" rel="noopener">mándanos un WhatsApp</a>".</p>
-  <a class="link-pedir" href="#como-pedir" id="link-como-pedir">¿Primera vez? Mira cómo pedir ▸</a>
+<section class="hero2">
+  <div class="hero2-in">
+    <div class="hero2-txt">
+      <span class="eyebrow">Casa Zavala en Monterrey · Distribuidor oficial</span>
+      <h1>Café de origen, hasta la puerta de tu hogar</h1>
+      <p>Café molido o en grano. Entregamos en Monterrey y su área metropolitana. Envíos nacionales, previa cotización.</p>
+      <div class="hero2-btns"><a class="btn-hero" href="#catalogo">Ver cafés</a><a class="btn-hero sec" href="#como-pedir" id="link-como-pedir">¿Cómo pedir?</a></div>
+      <ul class="confianza">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>Entrega a domicilio</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v10H3z"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/></svg>Paga al recibir o con tarjeta</li>
+        <li><a id="dudas-wa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.5 2 2.5 4 4.5 4.5l1.2-1.2 1.8.8c0 1.4-1 2.2-2.4 2-3-.5-5.7-3.2-6.2-6.2-.2-1.4.6-2.4 2-2.4l.8 1.8z"/></svg>Te atendemos por WhatsApp</a></li>
+      </ul>
+    </div>
+    <div class="hero2-img">
+      <div class="hero2-circulo"></div>
+      <img class="hero2-bolsa" src="img/Banners/showroom.webp" alt="Café de origen · Veracruz" width="800" height="800" fetchpriority="high">
+      <div class="logo-temp hero2-sello" id="logo-temp"><img class="hero-logo" src="logo.webp" alt="Casa Zavala · Café de origen · Est. 2026" width="132" height="132"></div>
+    </div>
   </div>
 </section>
+<h2 class="titulo-seccion" id="catalogo">Elige tu café</h2>
 
 <nav class="filtros" id="filtros" aria-label="Filtros"></nav>
 <main>
@@ -246,13 +335,15 @@ footer a{color:var(--verde)}
 
 <script>
 /* ===== Configuración ===== */
+// PRUEBA DEV: pega aquí la URL /exec de la API de DEV. Vacía = modo demostración (catálogo de ejemplo, el pedido no se registra).
 const API = 'https://script.google.com/macros/s/AKfycbwYEuwQYqOez2H128KDTpl2fyjH3N41GyfsT4neiIFlyiMp72CXTfsVKnjYQM9kENvT/exec';
 const MODO_DEV = false;   // en producción: false (quita la franja roja)
+const DEMO = !API || /[?&]demo\b/.test(location.search);
 const MUNICIPIOS = ['Monterrey','San Pedro','San Nicolás','Apodaca','Guadalupe','Escobedo','Santa Catarina','Santiago','Juárez','García','Otro'];
 const MIN_CACHE = 5;
 // Decoración de temporada alrededor del logo: 'auto' (por fecha), 'halloween', 'muertos', 'navidad' o 'ninguna'
 // auto = Halloween del 15 al 31 oct · Día de Muertos del 1 al 5 nov · Navidad del 1 dic al 6 ene
-const TEMPORADA = 'auto';
+const TEMPORADA = 'false';
 
 /* ===== Utilidades ===== */
 const $ = s => document.querySelector(s);
@@ -260,9 +351,21 @@ const pesos = n => '$' + Number(n || 0).toLocaleString('es-MX', {maximumFraction
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const leer = (k, def) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? def; } catch (e) { return def; } };
-const nombreCorto = p => (p.categoria === 'Bombones' ? p.producto : `${p.presentacion} ${p.tamano}`) + (p.tueste ? ` · ${p.tueste}` : '');
+// Foto limpia (solo el producto) en img/producto/<SKU>.webp; si no existe, la imagen del catálogo
+const FOTO_LIMPIA = new Set(['CZ-VER-1K-GR-AM','CZ-VER-1K-GR-EU','CZ-VER-1K-MO-AM','CZ-VER-1K-MO-EU','CZ-VER-250-GR-AM','CZ-VER-250-GR-EU','CZ-VER-250-MO-AM','CZ-VER-250-MO-EU','CZ-VER-500-GR-AM','CZ-VER-500-GR-EU','CZ-VER-500-MO-AM','CZ-VER-500-MO-EU','CZ-VER-BOM-CH','CZ-VER-BOM-MD']);
+const fotoProducto = p => FOTO_LIMPIA.has(p.sku) ? `img/producto/${p.sku}.webp` : p.imagen;
+const SABOR = {Americano: 'Suave', Europeo: 'Intenso'};
+// Precio de lista que se muestra abajo del precio real: precio × (1 + %). Pon 0 para quitarlo.
+const PRECIO_LISTA_PCT = 13;
+const precioLista = p => PRECIO_LISTA_PCT > 0 && p.precio > 0 ? `<span class="precio-lista">Precio de lista: <s>${pesos(Math.round(p.precio * (1 + PRECIO_LISTA_PCT / 100)))}</s></span>` : '';
+// Nombre con el tamaño en otro tamaño y color: «Café en grano <span class="tam">250 g</span>»
+const tituloHtml = p => p.categoria === 'Bombones' ? esc(p.producto) : `Café ${/grano/i.test(p.presentacion || '') ? 'en grano' : 'molido'} <span class="tam">${esc(p.tamano)}</span>`;
+const tituloDe = p => p.categoria === 'Bombones' ? p.producto : `Café ${/grano/i.test(p.presentacion || '') ? 'en grano' : 'molido'} ${p.tamano}`;
+const nombreLargo = p => tituloDe(p) + (p.tueste ? ` · ${SABOR[p.tueste] || p.tueste}` : '');
+const nombreCortoViejo = p => (p.categoria === 'Bombones' ? p.producto : `${p.presentacion} ${p.tamano}`) + (p.tueste ? ` · ${p.tueste}` : '');
 
 /* ===== Estado ===== */
+const nombreCorto = nombreLargo;
 let catalogo = [];
 let whatsapp = 'https://wa.me/528115088658';
 let carrito = leer('cz_carrito', {});   // {sku: cantidad}
@@ -289,7 +392,20 @@ async function cargarCatalogo() {
   if (enCache && Date.now() - enCache.t < MIN_CACHE * 60000) { usarCatalogo(enCache.d); refrescar(); return; }
   await refrescar(true);
 }
+const DEMO_CATALOGO = (() => {
+  const c = (t, pr, ta, pre, d) => ({sku: `CZ-VER-${ta === '1 kg' ? '1K' : ta.replace(' g', '')}-${pr === 'Grano' ? 'GR' : 'MO'}-${t === 'Americano' ? 'AM' : 'EU'}`, categoria: 'Café', producto: 'Café', presentacion: pr, tamano: ta, tueste: t, proveedor: 'Finca Negra', origen: 'Veracruz', descripcion: d, precio: pre, hay: true});
+  const l = [];
+  [['250 g', 170, 160], ['500 g', 290, 280], ['1 kg', 520, 500]].forEach(([ta, mo, gr]) => ['Americano', 'Europeo'].forEach(t => {
+    l.push(c(t, 'Molido', ta, mo, t === 'Americano' ? 'Suave, redondo y fácil de amar.' : 'Intenso, con cuerpo.'));
+    l.push(c(t, 'Grano', ta, gr, t === 'Americano' ? 'Suave, redondo y fácil de amar.' : 'Intenso, con cuerpo.'));
+  }));
+  l.forEach(x => { x.imagen = `img/${x.sku}.webp`; });
+  l.push({sku: 'CZ-VER-BOM-CH', categoria: 'Bombones', producto: 'Bombones · paquete chico', presentacion: '', tamano: '5 piezas', tueste: '', proveedor: 'Finca Negra', origen: 'Veracruz', descripcion: 'El acompañante ideal para tu café.', precio: 45, imagen: 'img/CZ-VER-BOM-CH.webp', hay: true, ultimas: true});
+  l.push({sku: 'CZ-VER-BOM-MD', categoria: 'Bombones', producto: 'Bombones · paquete grande', presentacion: '', tamano: '15 piezas', tueste: '', proveedor: 'Finca Negra', origen: 'Veracruz', descripcion: 'Para regalar o compartir.', precio: 110, imagen: 'img/CZ-VER-BOM-MD.webp', hay: false});
+  return {ok: true, whatsapp: 'https://wa.me/528115088658', productos: l};
+})();
 async function refrescar(mostrarError) {
+  if (DEMO) { usarCatalogo(DEMO_CATALOGO); return; }
   try {
     const r = await fetch(API + '?accion=catalogo', {redirect: 'follow'});
     const d = await r.json();
@@ -336,11 +452,11 @@ function abrirEnlaceProducto() {
 
 /* ===== Filtros ===== */
 function valores(campo) { return [...new Set(catalogo.filter(p => campo === 'categoria' || p.categoria === filtro.categoria).map(p => p[campo]).filter(Boolean))]; }
-const ETIQUETA = {Grano: 'En grano'};
+const ETIQUETA = {Grano: 'En grano', Molido: 'Molido', Americano: 'Suave', Europeo: 'Intenso', Todos: 'Todos', Todas: 'Todas'};
 function grupo(titulo, campo, opciones, todos, siempre) {
   if (opciones.length < 2 && !siempre) return '';
   const lista = (todos ? [todos] : []).concat(opciones);
-  return `<div class="grupo"><span>${titulo}</span>${lista.map(o =>
+  return `<div class="grupo">${titulo ? `<span>${titulo}</span>` : ''}${lista.map(o =>
     `<button class="chip" data-campo="${campo}" data-valor="${esc(o)}" aria-pressed="${filtro[campo] === o}">${esc(ETIQUETA[o] || o)}</button>`).join('')}</div>`;
 }
 // Tamaño de menor a mayor leyendo el número (250 g, 500 g, 1 kg, 2 kg…), aunque lleguen tamaños nuevos
@@ -357,15 +473,13 @@ const SIN_FILTRO = {proveedor: 'Todas', tamano: 'Todos', presentacion: 'Todos', 
 function pintarFiltros() {
   const cafe = filtro.categoria === 'Café';
   const activos = Object.keys(SIN_FILTRO).some(k => filtro[k] !== SIN_FILTRO[k]);
-  $('#filtros').innerHTML = grupo('', 'categoria', valores('categoria'), '', true) +
-    (activos ? '<button class="limpiar" id="limpiar">Quitar filtros</button>' : '') +
-    '<div class="selects">' + [
-      menu('Marca', 'proveedor', valores('proveedor').sort((a, b) => a.localeCompare(b)), 'Todas', true),
-      cafe ? menu('Tueste', 'tueste', enOrden(valores('tueste'), ['Americano', 'Europeo']), 'Todos') : '',
-      cafe ? menu('Molienda', 'presentacion', enOrden(valores('presentacion'), ['Molido', 'Grano']), 'Todos') : '',
-      cafe ? menu('Tamaño', 'tamano', valores('tamano').sort((a, b) => gramos(a) - gramos(b)), 'Todos') : '',
-      menu('Origen', 'origen', valores('origen').sort((a, b) => a.localeCompare(b)), 'Todos')
-    ].join('') + '</div>';
+  $('#filtros').innerHTML = `<div class="tabs">${grupo('', 'categoria', valores('categoria'), '', true)}</div>` +
+    (cafe ? `<div class="fila-filtros">
+      ${grupo('Sabor', 'tueste', enOrden(valores('tueste'), ['Americano', 'Europeo']), 'Todos')}
+      ${grupo('¿Molido o en grano?', 'presentacion', enOrden(valores('presentacion'), ['Molido', 'Grano']), 'Todos')}
+      ${grupo('Tamaño', 'tamano', valores('tamano').sort((a, b) => gramos(a) - gramos(b)), 'Todos')}
+      ${grupo('Marca', 'proveedor', valores('proveedor').sort((a, b) => a.localeCompare(b)), 'Todas')}
+      ${activos ? '<button class="limpiar" id="limpiar">Ver todos</button>' : ''}</div>` : '');
 }
 $('#filtros').addEventListener('click', e => {
   if (e.target.id === 'limpiar') { Object.assign(filtro, SIN_FILTRO); pintarFiltros(); pintarLista(); return; }
@@ -389,16 +503,14 @@ function pintarLista() {
   if (!lista.length) { $('#lista').innerHTML = '<div class="vacio">No hay productos con esos filtros.</div>'; return; }
   $('#lista').innerHTML = lista.map(p => {
     const badge = !p.hay ? '<span class="badge agotado">Agotado</span>' : p.ultimas ? '<span class="badge ultimas">Últimas piezas</span>' : '';
-    const titulo = p.categoria === 'Bombones' ? p.producto : `${p.presentacion} ${p.tamano}`;
+    const foto = fotoProducto(p), n = tituloDe(p), sabor = SABOR[p.tueste];
     return `<article class="card">
-      <div class="foto${p.imagen ? ' esperando' : ''}" data-ver="${esc(p.sku)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(titulo)}"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(titulo)}</div></div>${p.imagen ? `<img loading="lazy" src="${esc(p.imagen)}" alt="${esc(p.producto + ' ' + p.tueste)}" onload="this.parentNode.classList.remove('esperando');this.parentNode.classList.add('lista')" onerror="this.parentNode.classList.remove('esperando');this.remove()">` : ''}${badge}</div>
+      <div class="foto${foto ? ' esperando' : ''}" data-ver="${esc(p.sku)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(n)}"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(n)}</div></div>${foto ? `<img loading="lazy" src="${esc(foto)}" alt="${esc(nombreLargo(p))}" onload="this.parentNode.classList.remove('esperando');this.parentNode.classList.add('lista')" onerror="if(this.dataset.alt!=='1'&&'${esc(p.imagen || '')}'){this.dataset.alt='1';this.src='${esc(p.imagen || '')}'}else{this.parentNode.classList.remove('esperando');this.remove()}">` : ''}${badge}<span class="lupa" aria-hidden="true">Ver más</span></div>
       <div class="info">
-        <div class="meta">${esc([p.proveedor, p.tueste, p.origen].filter(Boolean).join(' · '))}</div>
-        <h3 data-ver="${esc(p.sku)}">${esc(titulo)}</h3>
-        <p class="desc">${esc(p.descripcion)}</p>
-        <button class="ver" data-ver="${esc(p.sku)}">Ver detalles</button>
-        <div class="pie"><span class="precio">${pesos(p.precio)}</span>
-          <button class="agregar" data-sku="${esc(p.sku)}" ${p.hay ? '' : 'disabled'}>${p.hay ? (carrito[p.sku] ? `En carrito (${carrito[p.sku]})` : 'Agregar') : 'Agotado'}</button></div>
+        <h3 data-ver="${esc(p.sku)}">${tituloHtml(p)}</h3>
+        ${sabor ? `<span class="sabor ${sabor === 'Suave' ? 'suave' : 'intenso'}">${sabor}</span>` : p.tamano && p.categoria === 'Bombones' ? `<span class="sabor">${esc(p.tamano)}</span>` : ''}
+        <div class="precio">${pesos(p.precio)}</div>${precioLista(p)}
+        <button class="agregar" data-sku="${esc(p.sku)}" ${p.hay ? '' : 'disabled'}>${p.hay ? (carrito[p.sku] ? `En carrito (${carrito[p.sku]})` : 'Agregar') : 'Agotado'}</button>
       </div></article>`;
   }).join('');
 }
@@ -470,37 +582,36 @@ function prepCafe(p) {
   const grano = /grano/i.test(p.presentacion || '');
   const aviso = grano
     ? `<div class="bloque aviso-prep"><div class="bloque-cab">${ico('molino', 'grande')}<div><h3>Necesitas moler</h3><p>Este café viene en grano entero. Muélelo justo antes de preparar para conservar el aroma. Si no tienes molino, elige la versión <b>molida</b>.</p></div></div>
-       <table class="tabla-molienda">${MOLIENDAS.map(([i, m, g]) => `<tr><td>${ico(i)}</td><td>${m}</td><td>${particulas(g)}</td><td>${g}</td></tr>`).join('')}</table></div>`
+       <details class="sub-acordeon"><summary>¿Qué tan fino lo muelo?</summary><table class="tabla-molienda">${MOLIENDAS.map(([i, m, g]) => `<tr><td>${ico(i)}</td><td>${m}</td><td>${particulas(g)}</td><td>${g}</td></tr>`).join('')}</table></details></div>`
     : `<div class="bloque aviso-prep"><div class="bloque-cab">${ico('filtro', 'grande')}<div><h3>Listo para usar · molienda media</h3><p>Ya viene molido; no necesitas molino. Úsalo en <b>cafetera de goteo con filtro</b> (de papel o de tela) o en filtro manual tipo V60 o Chemex. También funciona en café de olla.</p></div></div>
        <ul class="metodos">${[['goteo', 'Goteo con filtro'], ['v60', 'V60 / Chemex'], ['olla', 'Café de olla']].map(([i, l]) => `<li>${ico(i)}<span>${l}</span></li>`).join('')}</ul>
        <p class="nota-prep">${ico('espresso', 'chico')} Para espresso se necesita molienda fina: mejor pide el café en grano. ${ico('prensa', 'chico')} En prensa francesa puede quedar un poco de asiento en la taza.</p></div>`;
-  const receta = `<div class="bloque"><h3>Cómo prepararlo</h3>${pasos([
+  const receta = `<details class="bloque acordeon"><summary>Cómo prepararlo</summary>${pasos([
       ['cuchara', 'Medida', '2 cucharadas soperas rasas (unos 10 g) por taza de 180 ml. Ajusta al gusto.'],
       ['tetera', 'Agua a 90–96 °C', 'Caliente pero sin hervir: deja reposar 30 segundos después de que suelte el hervor.'],
       grano ? ['molino', 'Molienda', 'Según tu cafetera, con la tabla de arriba.'] : ['filtro', 'Filtro', 'De papel o de tela, del tamaño de tu cafetera.']
-    ])}</div>`;
-  const guardarlo = `<div class="bloque"><h3>Cómo guardarlo</h3>${pasos([
+    ])}</details>`;
+  const guardarlo = `<details class="bloque acordeon"><summary>Cómo guardarlo</summary>${pasos([
       ['valvula', 'Válvula', 'Deja salir los gases del tueste sin dejar entrar aire.'],
       ['zipper', 'Cierra el zipper', 'Saca el aire y presiona firme después de cada uso.'],
       ['sinsol', 'Fresco y sin sol', 'En la alacena, lejos de la estufa. No en el refrigerador.'],
       ['calendario', '3 a 4 semanas', 'Para el mejor sabor, después de abrir la bolsa.']
-    ])}</div>`;
+    ])}</details>`;
   return aviso + receta + guardarlo;
 }
 function prepBombon() {
-  return `<div class="bloque"><h3>Cómo disfrutarlos</h3>${pasos([
+  return `<details class="bloque acordeon" open><summary>Cómo disfrutarlos</summary>${pasos([
       ['taza', 'Con tu café', 'El acompañante ideal, a cualquier hora.'],
       ['regalo', 'Para regalar', 'Vienen en celofán con sellado hermético.'],
       ['sinsol', 'Ya abiertos', 'Cierra bien la bolsa y guárdalos en lugar fresco y seco.']
-    ])}</div>`;
+    ])}</details>`;
 }
 function atributos(p) {
   const cafe = p.categoria !== 'Bombones';
   const a = [
-    ['Marca', p.proveedor], ['Origen', p.origen], cafe && ['Tueste', p.tueste],
-    cafe && ['Presentación', /grano/i.test(p.presentacion || '') ? 'En grano entero' : p.presentacion ? 'Molido · molienda media' : ''],
+    cafe && ['Presentación', /grano/i.test(p.presentacion || '') ? 'En grano (necesitas molino)' : 'Molido, listo para usar'],
     ['Contenido', cafe ? p.tamano : (p.tamano || p.producto)],
-    ['Empaque', cafe ? 'Bolsa con válvula y cierre zipper' : 'Celofán con sellado hermético']
+    ['Empaque', cafe ? 'Bolsa con válvula y zipper' : 'Celofán sellado']
   ].filter(x => x && x[1]);
   return `<ul class="atributos">${a.map(([k, v]) => `<li><b>${esc(k)}</b>${esc(v)}</li>`).join('')}</ul>`;
 }
@@ -510,19 +621,21 @@ function abrirFicha(sku, origen) {
   const p = catalogo.find(x => x.sku === sku); if (!p) return;
   fichaSku = sku; fichaOrigen = origen || null;
   const cafe = p.categoria !== 'Bombones';
-  const titulo = cafe ? `${p.presentacion} ${p.tamano}` : p.producto;
+  const titulo = tituloDe(p);
   const t = cafe && TUESTES[p.tueste];
   const estado = !p.hay ? '<span class="estado" style="color:var(--rojo)">Agotado por ahora</span>' : p.ultimas ? '<span class="estado" style="color:var(--ambar)">Últimas piezas</span>' : '<span class="estado" style="color:var(--verde)">Disponible</span>';
   const dudas = `${whatsapp}${whatsapp.indexOf('?') < 0 ? '?' : '&'}text=${encodeURIComponent('Hola, tengo una duda sobre ' + nombreCorto(p))}`;
   $('#ficha').innerHTML = `<button class="ficha-cerrar" id="ficha-cerrar" aria-label="Cerrar">×</button>
     <div class="ficha-foto">
-      <div class="zoom" id="zoom">${p.imagen ? `<img src="${esc(p.imagen)}" alt="${esc(nombreCorto(p))}" draggable="false">` : `<div class="sin">${esc(titulo)}</div>`}</div>
-      ${p.imagen ? `<div class="zoom-ctl"><span id="zoom-ayuda">Toca la foto para acercar y muévete para ver los detalles.</span><button id="zoom-btn" aria-pressed="false">Acercar +</button></div>` : ''}
+      <div class="zoom" id="zoom">${fotoProducto(p) ? `<img id="zoom-img" src="${esc(fotoProducto(p))}" alt="${esc(nombreCorto(p))}" draggable="false">` : `<div class="sin">${esc(titulo)}</div>`}</div>
+      ${p.imagen && fotoProducto(p) !== p.imagen ? `<div class="miniaturas"><button class="mini-foto activa" data-src="${esc(fotoProducto(p))}"><img src="${esc(fotoProducto(p))}" alt="">Producto</button><button class="mini-foto" data-src="${esc(p.imagen)}"><img src="${esc(p.imagen)}" alt="" loading="lazy">Ficha completa</button></div>` : ''}
+      ${p.imagen ? `<div class="zoom-ctl"><span id="zoom-ayuda">Toca la foto para acercar.</span><button id="zoom-btn" aria-pressed="false">Acercar +</button></div>` : ''}
     </div>
     <div class="ficha-info">
-      <div class="meta">${esc([p.proveedor, p.tueste, p.origen].filter(Boolean).join(' · '))}</div>
-      <h2 id="ficha-titulo">${esc(titulo)}</h2>
-      <div><span class="precio">${pesos(p.precio)}</span> &nbsp; ${estado}</div>
+      <div class="meta">${esc([p.proveedor, p.origen].filter(Boolean).join(' · '))}</div>
+      <h2 id="ficha-titulo">${tituloHtml(p)}</h2>
+      ${cafe && SABOR[p.tueste] ? `<span class="sabor ${SABOR[p.tueste] === 'Suave' ? 'suave' : 'intenso'}" style="align-self:flex-start">${SABOR[p.tueste]} · tueste ${esc(p.tueste)}</span>` : ''}
+      <div class="ficha-precio"><span class="precio">${pesos(p.precio)}</span> &nbsp; ${estado}${precioLista(p)}</div>
       ${p.descripcion ? `<p class="desc" style="font-size:15px;flex:none">${esc(p.descripcion)}</p>` : ''}
       ${atributos(p)}
       <div class="ficha-acciones">${p.hay
@@ -551,6 +664,10 @@ function cerrarFicha(sinHistorial) {
 }
 function prepararZoom() {
   const z = $('#zoom'), img = z && z.querySelector('img'), btn = $('#zoom-btn');
+  document.querySelectorAll('.mini-foto').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.mini-foto').forEach(x => x.classList.toggle('activa', x === b));
+    if (img) { z.classList.remove('activo'); img.style.transformOrigin = '50% 50%'; img.src = b.dataset.src; if (btn) { btn.textContent = 'Acercar +'; btn.setAttribute('aria-pressed', false); } }
+  });
   if (!img) return;
   const punto = (e) => { const r = z.getBoundingClientRect();
     const x = Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)), y = Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100));
@@ -604,14 +721,14 @@ function pintarCarrito() {
   const ls = lineas();
   if (!ls.length) { $('#cuerpo').innerHTML = '<div class="vacio">Tu carrito está vacío.</div>'; $('#pie').innerHTML = '<button class="secundario" onclick="cerrar()">Ver productos</button>'; return; }
   $('#cuerpo').innerHTML = ls.map(({p, c}) => `<div class="item">
-      ${p.imagen ? `<img src="${esc(p.imagen)}" alt="">` : '<div class="mini"></div>'}
+      ${fotoProducto(p) ? `<img src="${esc(fotoProducto(p))}" alt="">` : '<div class="mini"></div>'}
       <div><h4>${esc(nombreCorto(p))}</h4><p>${pesos(p.precio)} c/u${p.hay ? '' : ' · <b style="color:var(--rojo)">agotado</b>'}</p>
         <button class="quitar" data-sku="${esc(p.sku)}" data-d="-99">Quitar</button></div>
       <div class="cant"><button data-sku="${esc(p.sku)}" data-d="-1" aria-label="Menos">−</button><b>${c}</b><button data-sku="${esc(p.sku)}" data-d="1" aria-label="Más">+</button></div>
     </div>`).join('');
   const total = ls.reduce((a, {p, c}) => a + p.precio * c, 0);
   $('#pie').innerHTML = `<div class="total"><span>Subtotal</span><span>${pesos(total)}</span></div>
-    <p class="nota">Precio normal. Si tienes código de descuento lo pones en el siguiente paso; el total final te lo confirmamos al registrar el pedido. Consulta los <a href="terminos.html" target="_blank" rel="noopener">términos de entrega, cambios y devoluciones</a>.</p>
+    <p class="nota">Te confirmamos el total por WhatsApp. <a href="terminos.html" target="_blank" rel="noopener">Entregas y cambios</a></p>
     <button class="principal" id="ir-datos">Continuar</button>`;
   $('#ir-datos').onclick = () => { vista = 'datos'; pintarDatos(); };
 }
@@ -620,57 +737,92 @@ $('#cuerpo').addEventListener('click', e => {
   cambiar(b.dataset.sku, Number(b.dataset.d));
 });
 
-/* ===== Datos de entrega ===== */
+/* ===== Datos de entrega =====
+   El cliente escribe su C.P. y elige su colonia de la lista (cp-zmm.json: SEPOMEX, Monterrey y área metropolitana).
+   Si el C.P. no está en la zona, se toma como envío nacional (te cotizamos por WhatsApp). Sin casillas. */
+let CPS = null;
+async function cargarCPs() { if (CPS) return CPS; try { const r = await fetch('cp-zmm.json'); CPS = await r.json(); } catch (e) { CPS = {}; } return CPS; }
+let zona = {cp: '', municipio: '', nacional: false};
+async function buscarCP(cp, coloniaGuardada) {
+  const est = $('#cp-estado'), sel = $('#colonia'), box = $('#zona-colonia');
+  if (!/^\d{5}$/.test(cp)) { zona = {cp: '', municipio: '', nacional: false}; est.textContent = ''; est.className = 'cp-estado'; box.hidden = true; $('#ciudad-wrap').hidden = true; return; }
+  est.textContent = 'Buscando tu colonia…'; est.className = 'cp-estado';
+  const d = (await cargarCPs())[cp];
+  if (d) {
+    zona = {cp, municipio: d[0], nacional: false};
+    est.innerHTML = `<b>${esc(d[0])}, N.L.</b> · Entregamos en tu zona`; est.className = 'cp-estado ok';
+    sel.innerHTML = (d[1].length > 1 ? '<option value="">Elige tu colonia…</option>' : '') + d[1].map(c => `<option>${esc(c)}</option>`).join('') + '<option value="__otra">Otra / no aparece</option>';
+    if (coloniaGuardada && d[1].indexOf(coloniaGuardada) >= 0) sel.value = coloniaGuardada;
+    else if (coloniaGuardada) { sel.value = '__otra'; $('#forma').coloniaOtra.value = coloniaGuardada; }
+    box.hidden = false; $('#ciudad-wrap').hidden = true;
+  } else {
+    zona = {cp, municipio: 'Otro', nacional: true};
+    est.innerHTML = 'Este C.P. está fuera de Monterrey y su área metropolitana. <b>Te cotizamos el envío por WhatsApp</b> antes de cobrar.'; est.className = 'cp-estado aviso-cp';
+    sel.innerHTML = '<option value="__otra">Escribe tu colonia</option>'; sel.value = '__otra';
+    if (coloniaGuardada) $('#forma').coloniaOtra.value = coloniaGuardada;
+    box.hidden = false; $('#ciudad-wrap').hidden = false;
+  }
+  $('#otra-colonia').hidden = sel.value !== '__otra';
+  $('#colonia-wrap').hidden = zona.nacional;
+}
 function pintarDatos(error) {
   $('#titulo-panel').textContent = 'Datos de entrega';
   const d = leer('cz_datos', {});
   $('#cuerpo').innerHTML = `${error ? `<div class="error">${esc(error)}</div>` : ''}
   <form id="forma" novalidate>
-    <label>Nombre completo<input name="nombre" required autocomplete="name" value="${esc(d.nombre)}"></label>
-    <label>WhatsApp (10 dígitos)<input name="telefono" required inputmode="tel" autocomplete="tel" value="${esc(d.telefono)}"></label>
-    <label>Dirección (calle, número y colonia)<input name="direccion" required autocomplete="street-address" value="${esc(d.direccion)}"></label>
-    <div class="dos">
-      <label>Código postal<input name="cp" required inputmode="numeric" maxlength="5" autocomplete="postal-code" value="${esc(d.cp)}"></label>
-      <label>Municipio<select name="municipio" required>${['', ...MUNICIPIOS].map(m => `<option ${d.municipio === m ? 'selected' : ''} value="${esc(m)}">${m || 'Elige…'}</option>`).join('')}</select></label>
+    <label>Tu nombre<input name="nombre" required autocomplete="name" value="${esc(d.nombre)}" placeholder="Nombre y apellido"></label>
+    <label>Tu WhatsApp<input name="telefono" required inputmode="tel" autocomplete="tel" value="${esc(d.telefono)}" placeholder="10 dígitos, ej. 81 1234 5678"></label>
+    <label>Código postal<input name="cp" id="cp" required inputmode="numeric" maxlength="5" autocomplete="postal-code" value="${esc(d.cp)}" placeholder="Ej. 66400"></label>
+    <p class="cp-estado" id="cp-estado" aria-live="polite"></p>
+    <div id="zona-colonia" hidden>
+      <label id="colonia-wrap">Colonia<select name="colonia" id="colonia"></select></label>
+      <label id="otra-colonia" hidden>Tu colonia<input name="coloniaOtra" autocomplete="address-level3" placeholder="Nombre de tu colonia"></label>
     </div>
-    <label class="casilla"><input type="checkbox" name="envioNacional" value="si" id="nacional" ${d.envioNacional ? 'checked' : ''}>¿Envío nacional? (fuera de Monterrey y área metropolitana)</label>
-    <p class="nota" id="nota-nacional" style="margin:-4px 0 0" ${d.envioNacional ? '' : 'hidden'}>Envíos nacionales disponibles bajo previa cotización de envío; te cotizamos por WhatsApp antes de cobrar.</p>
-    <label>¿Tipo de cliente?<select name="tipo" id="tipo"><option value="B2C">Para mi casa u oficina</option><option value="B2B" ${d.tipo === 'B2B' ? 'selected' : ''}>Para mi negocio (cafetería, restaurante)</option></select></label>
-    <p class="nota" id="nota-negocio" style="margin:-4px 0 0" ${d.tipo === 'B2B' ? '' : 'hidden'}>Serás contactado para validar.</p>
-    <label>Código de descuento (opcional)<input name="codigo" autocomplete="off" value="${esc(d.codigo)}"></label>
-    <label>Comentarios (opcional)<textarea name="notas" maxlength="300">${esc(d.notas)}</textarea></label>
-    <label class="casilla"><input type="checkbox" name="sinPromos" value="si" ${d.sinPromos ? 'checked' : ''}>No quiero recibir promociones por WhatsApp.</label>
-    <label class="casilla"><input type="checkbox" name="permisoMeta" value="si">(Opcional) Acepto compartir mis datos cifrados con Meta para medir la eficacia de sus anuncios.</label>
-    <p class="aviso">En Casa Zavala cuidamos tus datos. Usamos tu nombre, teléfono y dirección únicamente para procesar, cobrar y entregar tu pedido, enviarte promociones y, si lo autorizas, medir anuncios en Meta (cifrados). Compartimos solo lo necesario con Clip (pagos con tarjeta) y paqueterías (envíos). Para cancelar usos opcionales o ejercer tus derechos, contáctanos en casa.zavala.mty@gmail.com. Al hacer tu pedido aceptas los <a href="terminos.html" target="_blank" rel="noopener">términos y condiciones</a>. <a href="privacidad.html" target="_blank" rel="noopener">Aviso de privacidad completo</a>.</p>
+    <label id="ciudad-wrap" hidden>Ciudad y estado<input name="ciudad" value="${esc(d.ciudad)}" placeholder="Ej. Saltillo, Coahuila"></label>
+    <label>Calle y número<input name="calle" required autocomplete="address-line1" value="${esc(d.calle)}" placeholder="Ej. Av. Juárez 123"></label>
+    <label>Indicaciones para el repartidor <span class="opc">(opcional)</span><textarea name="notas" maxlength="300" placeholder="Ej. casa blanca, portón negro">${esc(d.notas)}</textarea></label>
+    <details class="mas"${d.codigo || d.tipo === 'B2B' ? ' open' : ''}><summary>¿Tienes código de descuento o compras para tu negocio?</summary>
+      <label>Código de descuento<input name="codigo" autocomplete="off" value="${esc(d.codigo)}"></label>
+      <label>¿Para quién es?<select name="tipo"><option value="B2C">Para mi casa u oficina</option><option value="B2B" ${d.tipo === 'B2B' ? 'selected' : ''}>Para mi negocio (te contactamos para validar)</option></select></label>
+    </details>
+    <p class="aviso">Usamos tus datos solo para preparar y entregar tu pedido. <a href="privacidad.html" target="_blank" rel="noopener">Aviso de privacidad</a> · <a href="terminos.html" target="_blank" rel="noopener">Términos</a></p>
     <div class="trampa" aria-hidden="true"><label>Sitio web<input name="website" tabindex="-1" autocomplete="off"></label></div>
   </form>`;
-  $('#pie').innerHTML = `<button class="principal" id="enviar">Hacer pedido<small class="sub-boton">Se confirmará vía WhatsApp</small></button><button class="secundario" id="volver">Volver al carrito</button>`;
+  $('#pie').innerHTML = `<button class="principal" id="enviar">Hacer pedido<small class="sub-boton">Te confirmamos por WhatsApp</small></button><button class="secundario" id="volver">Volver al carrito</button>`;
   $('#volver').onclick = () => { vista = 'carrito'; pintarCarrito(); };
   $('#enviar').onclick = enviar;
-  // Mayoreo: aviso de que se valida antes de aplicar
-  $('#tipo').onchange = e => { $('#nota-negocio').hidden = e.target.value !== 'B2B'; };
-  // Envío nacional: aviso de cotización y municipio «Otro»
-  $('#nacional').onchange = e => {
-    $('#nota-nacional').hidden = !e.target.checked;
-    if (e.target.checked) $('#forma').municipio.value = 'Otro';
-  };
+  $('#cp').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5); buscarCP(e.target.value); });
+  $('#colonia').addEventListener('change', e => { $('#otra-colonia').hidden = e.target.value !== '__otra'; if (e.target.value === '__otra') $('#forma').coloniaOtra.focus(); });
+  cargarCPs();
+  if (d.cp) buscarCP(d.cp, d.colonia);
 }
 async function enviar() {
   const f = Object.fromEntries(new FormData($('#forma')).entries());
   const tel = String(f.telefono || '').replace(/\D/g, '').slice(-10);
-  const falta = f.nombre.trim().length < 3 ? 'Escribe tu nombre completo.' : tel.length !== 10 ? 'Escribe tu WhatsApp a 10 dígitos.'
-    : f.direccion.trim().length < 6 ? 'Escribe tu dirección de entrega.' : !/^\d{5}$/.test(f.cp) ? 'Escribe tu código postal (5 dígitos).'
-    : !f.municipio ? 'Elige tu municipio.' : !lineas().length ? 'Tu carrito está vacío.' : '';
-  guardar('cz_datos', {nombre: f.nombre, telefono: f.telefono, direccion: f.direccion, cp: f.cp, municipio: f.municipio, tipo: f.tipo, sinPromos: f.sinPromos === 'si', envioNacional: f.envioNacional === 'si'});
+  const colonia = (f.colonia && f.colonia !== '__otra' ? f.colonia : f.coloniaOtra || '').trim();
+  const falta = f.nombre.trim().length < 3 ? 'Escribe tu nombre.' : tel.length !== 10 ? 'Escribe tu WhatsApp a 10 dígitos.'
+    : !/^\d{5}$/.test(f.cp) ? 'Escribe tu código postal (5 números).' : zona.cp !== f.cp ? 'Espera un momento: estamos buscando tu colonia.'
+    : colonia.length < 3 ? 'Elige o escribe tu colonia.' : zona.nacional && (f.ciudad || '').trim().length < 3 ? 'Escribe tu ciudad y estado.'
+    : (f.calle || '').trim().length < 3 ? 'Escribe tu calle y número.' : !lineas().length ? 'Tu carrito está vacío.' : '';
+  guardar('cz_datos', {nombre: f.nombre, telefono: f.telefono, cp: f.cp, colonia, calle: f.calle, ciudad: f.ciudad, notas: f.notas, codigo: f.codigo, tipo: f.tipo});
   if (falta) { pintarDatos(falta); return; }
+  const direccion = `${f.calle.trim()}, Col. ${colonia}` + (zona.nacional ? `, ${f.ciudad.trim()}` : `, ${zona.municipio}, N.L.`);
+  const envio = {nombre: f.nombre, telefono: tel, direccion, cp: f.cp, municipio: zona.municipio, tipo: f.tipo || 'B2C', codigo: f.codigo || '', notas: f.notas || '', website: f.website || '',
+    permisoMeta: false, sinPromos: false, envioNacional: zona.nacional, lineas: Object.entries(carrito).map(([sku, cantidad]) => ({sku, cantidad}))};
   const b = $('#enviar'); b.disabled = true; b.textContent = 'Enviando…';
+  if (DEMO) {
+    const ls = lineas();
+    setTimeout(() => { carrito = {}; guardar('cz_carrito', carrito); pintarContador();
+      pintarGracias({ok: true, pedido: 'DEMO-01', mensaje: 'Pedido de prueba: no se registró en ninguna hoja.', total: ls.reduce((a, {p, c}) => a + p.precio * c, 0),
+        lineas: ls.map(({p, c}) => ({cantidad: c, producto: tituloDe(p), tueste: SABOR[p.tueste] || p.tueste, importe: p.precio * c})), whatsapp}, zona.nacional); }, 600);
+    return;
+  }
   try {
-    const r = await fetch(API, {method: 'POST', redirect: 'follow', headers: {'Content-Type': 'text/plain;charset=utf-8'},
-      body: JSON.stringify({...f, telefono: tel, permisoMeta: f.permisoMeta === 'si', sinPromos: f.sinPromos === 'si', envioNacional: f.envioNacional === 'si' || f.municipio === 'Otro', lineas: Object.entries(carrito).map(([sku, cantidad]) => ({sku, cantidad}))})});
+    const r = await fetch(API, {method: 'POST', redirect: 'follow', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(envio)});
     const d = await r.json();
     if (!d.ok) { localStorage.removeItem('cz_catalogo'); refrescar(); pintarDatos(d.error || 'No pudimos registrar tu pedido.'); return; }
     carrito = {}; guardar('cz_carrito', carrito); pintarContador(); localStorage.removeItem('cz_catalogo'); refrescar();
-    pintarGracias(d, f.envioNacional === 'si' || f.municipio === 'Otro');
+    pintarGracias(d, zona.nacional);
   } catch (e) {
     pintarDatos('No hubo conexión. Intenta de nuevo o escríbenos por WhatsApp.');
   }
