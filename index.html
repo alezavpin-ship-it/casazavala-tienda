@@ -311,6 +311,17 @@ textarea{min-height:64px}
 .total.linea{font-weight:400;font-size:14.5px;color:var(--gris);margin-bottom:2px}
 .total.descuento,.ok tr.descuento td{color:var(--verde);font-weight:600}
 .aviso-codigo{background:#fff5e0;border:1px solid #efd9a8;border-radius:10px;padding:8px 10px;color:#5b4320}
+/* Descuento automático (Catálogo, Tipo «Automático») y código en el carrito */
+.promo-barra{background:var(--ambar);color:#2b1d15;text-align:center;font-size:14px;line-height:1.35;padding:9px 16px;font-weight:500}
+.promo-barra b{font-weight:700}
+.badge-promo{display:inline-block;margin:2px 0 6px;font-size:12px;font-weight:700;color:var(--verde);background:#e6f0e9;border-radius:999px;padding:2px 8px}
+.bloque-desc{margin-top:14px;display:grid;gap:10px}
+.promo-carrito{border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.4;background:#e6f0e9;color:var(--verde)}
+.promo-carrito.falta{background:#fff5e0;color:#5b4320}
+.desglose{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:10px 12px}
+.desglose .total{font-size:15px}
+.desglose .total:last-child{margin:6px 0 0;padding-top:8px;border-top:1px solid var(--linea);font-size:17px}
+.ahorro-pie{color:var(--verde);font-weight:600;font-size:13.5px;margin:-2px 0 8px}
 </style>
 </head>
 <body>
@@ -322,6 +333,7 @@ textarea{min-height:64px}
     <button class="btn-carrito" id="abrir-carrito" aria-label="Abrir carrito">Mi Carrito <b id="num-carrito">0</b></button>
   </div>
 </header>
+<div class="promo-barra" id="promo-barra" hidden></div>
 
 <section class="hero2">
   <div class="hero2-in">
@@ -355,11 +367,11 @@ textarea{min-height:64px}
   <p>¿Grano o molido? ¿Cuál tueste? ¿Cómo pago? Aquí te respondemos.</p>
   <button class="faq-toggle" id="faq-toggle" aria-expanded="false" aria-controls="faq-lista">Ver preguntas frecuentes <span aria-hidden="true">▾</span></button></div>
   <div class="faq-lista" id="faq-lista" hidden>
-  <h3 class="faq-grupo">El café</h3><details class="faq-item"><summary><span class="faq-n">1</span><span class="faq-q">¿Es de cafetera o soluble?</span></summary><div class="faq-a">Es café 100% de grano para cafetera, <b>no soluble</b>. Lo vendemos en grano o molido (molienda media), listo para cafetera de goteo, filtro o café de olla.</div></details><details class="faq-item"><summary><span class="faq-n">2</span><span class="faq-q">¿Qué café manejan?</span></summary><div class="faq-a">Hoy tenemos <b>Café Finca Negra</b>, de Zapoapan de Cabañas, Veracruz, en tueste <b>Americano</b> (suave) y <b>Europeo</b> (intenso). Pronto, más orígenes de México.</div></details><details class="faq-item"><summary><span class="faq-n">3</span><span class="faq-q">¿Qué diferencia hay entre el Americano y el Europeo?</span></summary><div class="faq-a">Es el mismo café; cambia el tueste. El <b>Americano</b> es más claro: sabor suave, menos amargo, ideal para tomarlo solo. El <b>Europeo</b> es más oscuro: sabor intenso y con más cuerpo, ideal con leche (capuchino, latte) o en cafetera italiana. <b>Si lo tomas solo, Americano; si le pones leche, Europeo.</b></div></details><details class="faq-item"><summary><span class="faq-n">4</span><span class="faq-q">¿Qué presentaciones tienen?</span></summary><div class="faq-a">Bolsas de <b>250 g, 500 g y 1 kg</b>, en grano o molido, de los dos tuestes. También bombones en paquete chico y grande. La de 250 g es ideal para probar; la de 1 kg rinde más por tu dinero.</div></details><details class="faq-item"><summary><span class="faq-n">5</span><span class="faq-q">¿Qué son los bombones?</span></summary><div class="faq-a">Son el acompañante para tu café y un buen detalle para regalar. Vienen en celofán con sellado hermético; ya abiertos, cierra bien la bolsa y guárdalos en lugar fresco y seco.</div></details><h3 class="faq-grupo">Preparación</h3><details class="faq-item"><summary><span class="faq-n">6</span><span class="faq-q">¿Grano o molido?</span></summary><div class="faq-a"><b>Molido:</b> abres y preparas, sin molino. <b>En grano:</b> si tienes molino o cafetera de espresso; conserva mejor su aroma porque lo mueles justo antes de prepararlo.</div></details><details class="faq-item"><summary><span class="faq-n">7</span><span class="faq-q">¿Sirve para mi cafetera?</span></summary><div class="faq-a">El molido trae <b>molienda media</b>: perfecto para cafetera de goteo con filtro, V60, Chemex y café de olla. Para <b>espresso</b> se necesita molienda fina: pide el café en grano. En prensa francesa funciona, aunque puede quedar un poco de asiento.</div></details><details class="faq-item"><summary><span class="faq-n">8</span><span class="faq-q">¿Cuánto café uso por taza?</span></summary><div class="faq-a">Unas <b>2 cucharadas soperas rasas (10 g) por taza de 180 ml</b>, con agua caliente sin hervir (90 a 96 °C). Ajusta al gusto: más café, más intenso.</div></details><details class="faq-item"><summary><span class="faq-n">9</span><span class="faq-q">¿Cómo lo conservo y cuánto dura?</span></summary><div class="faq-a">La bolsa trae <b>válvula y cierre hermético</b>: saca el aire, ciérrala bien y guárdala en un lugar fresco, seco y sin sol. <b>No la metas al refrigerador.</b> Ya abierta, tiene su mejor sabor en las siguientes 3 a 4 semanas.</div></details><h3 class="faq-grupo">Pedidos, pagos y entregas</h3><details class="faq-item"><summary><span class="faq-n">10</span><span class="faq-q">¿Cómo hago mi pedido?</span></summary><div class="faq-a">Elige tu café, agrégalo al carrito, toca <b>Continuar</b>, llena tus datos de entrega y toca <b>Hacer pedido</b>. Te confirmamos por WhatsApp. <a href="#como-pedir" class="faq-como">Ver el video de cómo pedir</a>.</div></details><details class="faq-item"><summary><span class="faq-n">11</span><span class="faq-q">¿Cómo puedo pagar?</span></summary><div class="faq-a">Por <b>transferencia</b>, con <b>tarjeta</b> (te mandamos un link de pago seguro) o <b>contra entrega</b>. Los datos para transferencia te los enviamos solo por WhatsApp.</div></details><details class="faq-item"><summary><span class="faq-n">12</span><span class="faq-q">¿Dónde entregan y cuándo llega?</span></summary><div class="faq-a">Entregamos a domicilio en <b>Monterrey y su área metropolitana</b>. Al confirmar tu pedido por WhatsApp acordamos contigo el día y la hora de entrega.</div></details><details class="faq-item"><summary><span class="faq-n">13</span><span class="faq-q">¿Hacen envíos fuera de Monterrey?</span></summary><div class="faq-a">Sí, a todo México. Te <b>cotizamos el envío por WhatsApp</b> antes de cobrar; pagas hasta que aceptes la cotización.</div></details><details class="faq-item"><summary><span class="faq-n">14</span><span class="faq-q">¿Tienen precio para cafeterías o negocios?</span></summary><div class="faq-a">Sí. Al hacer tu pedido elige <b>“Para mi negocio”</b> y te contactamos para validar el precio de mayoreo.</div></details><details class="faq-item"><summary><span class="faq-n">15</span><span class="faq-q">¿Tienen promociones o códigos de descuento?</span></summary><div class="faq-a">En fechas especiales publicamos códigos de descuento. Síguenos en Instagram, Facebook y TikTok para no perdértelos, y escribe el código en el paso de datos de entrega.</div></details><details class="faq-item"><summary><span class="faq-n">16</span><span class="faq-q">¿Puedo cambiar o cancelar mi pedido?</span></summary><div class="faq-a">Sí, escríbenos por WhatsApp antes de la entrega y lo ajustamos. Consulta los <a href="terminos.html" target="_blank" rel="noopener">términos de entrega, cambios y devoluciones</a>.</div></details>
+  <h3 class="faq-grupo">El café</h3><details class="faq-item"><summary><span class="faq-n">1</span><span class="faq-q">¿Es de cafetera o soluble?</span></summary><div class="faq-a">Es café 100% de grano para cafetera, <b>no soluble</b>. Lo vendemos en grano o molido (molienda media), listo para cafetera de goteo, filtro o café de olla.</div></details><details class="faq-item"><summary><span class="faq-n">2</span><span class="faq-q">¿Qué café manejan?</span></summary><div class="faq-a">Hoy tenemos <b>Café Finca Negra</b>, de Zapoapan de Cabañas, Veracruz, en tueste <b>Americano</b> (suave) y <b>Europeo</b> (intenso). Pronto, más orígenes de México.</div></details><details class="faq-item"><summary><span class="faq-n">3</span><span class="faq-q">¿Qué diferencia hay entre el Americano y el Europeo?</span></summary><div class="faq-a">Es el mismo café; cambia el tueste. El <b>Americano</b> es más claro: sabor suave, menos amargo, ideal para tomarlo solo. El <b>Europeo</b> es más oscuro: sabor intenso y con más cuerpo, ideal con leche (capuchino, latte) o en cafetera italiana. <b>Si lo tomas solo, Americano; si le pones leche, Europeo.</b></div></details><details class="faq-item"><summary><span class="faq-n">4</span><span class="faq-q">¿Qué presentaciones tienen?</span></summary><div class="faq-a">Bolsas de <b>250 g, 500 g y 1 kg</b>, en grano o molido, de los dos tuestes. También bombones en paquete chico y grande. La de 250 g es ideal para probar; la de 1 kg rinde más por tu dinero.</div></details><details class="faq-item"><summary><span class="faq-n">5</span><span class="faq-q">¿Qué son los bombones?</span></summary><div class="faq-a">Son el acompañante para tu café y un buen detalle para regalar. Vienen en celofán con sellado hermético; ya abiertos, cierra bien la bolsa y guárdalos en lugar fresco y seco.</div></details><h3 class="faq-grupo">Preparación</h3><details class="faq-item"><summary><span class="faq-n">6</span><span class="faq-q">¿Grano o molido?</span></summary><div class="faq-a"><b>Molido:</b> abres y preparas, sin molino. <b>En grano:</b> si tienes molino o cafetera de espresso; conserva mejor su aroma porque lo mueles justo antes de prepararlo.</div></details><details class="faq-item"><summary><span class="faq-n">7</span><span class="faq-q">¿Sirve para mi cafetera?</span></summary><div class="faq-a">El molido trae <b>molienda media</b>: perfecto para cafetera de goteo con filtro, V60, Chemex y café de olla. Para <b>espresso</b> se necesita molienda fina: pide el café en grano. En prensa francesa funciona, aunque puede quedar un poco de asiento.</div></details><details class="faq-item"><summary><span class="faq-n">8</span><span class="faq-q">¿Cuánto café uso por taza?</span></summary><div class="faq-a">Unas <b>2 cucharadas soperas rasas (10 g) por taza de 180 ml</b>, con agua caliente sin hervir (90 a 96 °C). Ajusta al gusto: más café, más intenso.</div></details><details class="faq-item"><summary><span class="faq-n">9</span><span class="faq-q">¿Cómo lo conservo y cuánto dura?</span></summary><div class="faq-a">La bolsa trae <b>válvula y cierre hermético</b>: saca el aire, ciérrala bien y guárdala en un lugar fresco, seco y sin sol. <b>No la metas al refrigerador.</b> Ya abierta, tiene su mejor sabor en las siguientes 3 a 4 semanas.</div></details><h3 class="faq-grupo">Pedidos, pagos y entregas</h3><details class="faq-item"><summary><span class="faq-n">10</span><span class="faq-q">¿Cómo hago mi pedido?</span></summary><div class="faq-a">Elige tu café, agrégalo al carrito, toca <b>Continuar</b>, llena tus datos de entrega y toca <b>Hacer pedido</b>. Te confirmamos por WhatsApp. <a href="#como-pedir" class="faq-como">Ver el video de cómo pedir</a>.</div></details><details class="faq-item"><summary><span class="faq-n">11</span><span class="faq-q">¿Cómo puedo pagar?</span></summary><div class="faq-a">Por <b>transferencia</b>, con <b>tarjeta</b> (te mandamos un link de pago seguro) o <b>contra entrega</b>. Los datos para transferencia te los enviamos solo por WhatsApp.</div></details><details class="faq-item"><summary><span class="faq-n">12</span><span class="faq-q">¿Dónde entregan y cuándo llega?</span></summary><div class="faq-a">Entregamos a domicilio en <b>Monterrey y su área metropolitana</b>. Al confirmar tu pedido por WhatsApp acordamos contigo el día y la hora de entrega.</div></details><details class="faq-item"><summary><span class="faq-n">13</span><span class="faq-q">¿Hacen envíos fuera de Monterrey?</span></summary><div class="faq-a">Sí, a todo México. Te <b>cotizamos el envío por WhatsApp</b> antes de cobrar; pagas hasta que aceptes la cotización.</div></details><details class="faq-item"><summary><span class="faq-n">14</span><span class="faq-q">¿Tienen precio para cafeterías o negocios?</span></summary><div class="faq-a">Sí. Al hacer tu pedido elige <b>“Para mi negocio”</b> y te contactamos para validar el precio de mayoreo.</div></details><details class="faq-item"><summary><span class="faq-n">15</span><span class="faq-q">¿Tienen promociones o códigos de descuento?</span></summary><div class="faq-a">En fechas especiales publicamos códigos de descuento. Síguenos en Instagram, Facebook y TikTok para no perdértelos, y escribe el código en tu carrito. Cuando hay una promoción general (como El Buen Fin), se aplica sola, sin código.</div></details><details class="faq-item"><summary><span class="faq-n">16</span><span class="faq-q">¿Puedo cambiar o cancelar mi pedido?</span></summary><div class="faq-a">Sí, escríbenos por WhatsApp antes de la entrega y lo ajustamos. Consulta los <a href="terminos.html" target="_blank" rel="noopener">términos de entrega, cambios y devoluciones</a>.</div></details>
   <p class="faq-mas">¿No encuentras tu respuesta? <a class="link-wa" id="faq-wa" href="https://wa.me/528115088658" target="_blank" rel="noopener">Escríbenos por WhatsApp</a> y te ayudamos.</p>
   </div>
 </section>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Es de cafetera o soluble?", "acceptedAnswer": {"@type": "Answer", "text": "Es café 100% de grano para cafetera, no soluble. Lo vendemos en grano o molido (molienda media), listo para cafetera de goteo, filtro o café de olla."}}, {"@type": "Question", "name": "¿Qué café manejan?", "acceptedAnswer": {"@type": "Answer", "text": "Hoy tenemos Café Finca Negra, de Zapoapan de Cabañas, Veracruz, en tueste Americano (suave) y Europeo (intenso). Pronto, más orígenes de México."}}, {"@type": "Question", "name": "¿Qué diferencia hay entre el Americano y el Europeo?", "acceptedAnswer": {"@type": "Answer", "text": "Es el mismo café; cambia el tueste. El Americano es más claro: sabor suave, menos amargo, ideal para tomarlo solo. El Europeo es más oscuro: sabor intenso y con más cuerpo, ideal con leche (capuchino, latte) o en cafetera italiana. Si lo tomas solo, Americano; si le pones leche, Europeo."}}, {"@type": "Question", "name": "¿Qué presentaciones tienen?", "acceptedAnswer": {"@type": "Answer", "text": "Bolsas de 250 g, 500 g y 1 kg, en grano o molido, de los dos tuestes. También bombones en paquete chico y grande. La de 250 g es ideal para probar; la de 1 kg rinde más por tu dinero."}}, {"@type": "Question", "name": "¿Qué son los bombones?", "acceptedAnswer": {"@type": "Answer", "text": "Son el acompañante para tu café y un buen detalle para regalar. Vienen en celofán con sellado hermético; ya abiertos, cierra bien la bolsa y guárdalos en lugar fresco y seco."}}, {"@type": "Question", "name": "¿Grano o molido?", "acceptedAnswer": {"@type": "Answer", "text": "Molido: abres y preparas, sin molino. En grano: si tienes molino o cafetera de espresso; conserva mejor su aroma porque lo mueles justo antes de prepararlo."}}, {"@type": "Question", "name": "¿Sirve para mi cafetera?", "acceptedAnswer": {"@type": "Answer", "text": "El molido trae molienda media: perfecto para cafetera de goteo con filtro, V60, Chemex y café de olla. Para espresso se necesita molienda fina: pide el café en grano. En prensa francesa funciona, aunque puede quedar un poco de asiento."}}, {"@type": "Question", "name": "¿Cuánto café uso por taza?", "acceptedAnswer": {"@type": "Answer", "text": "Unas 2 cucharadas soperas rasas (10 g) por taza de 180 ml, con agua caliente sin hervir (90 a 96 °C). Ajusta al gusto: más café, más intenso."}}, {"@type": "Question", "name": "¿Cómo lo conservo y cuánto dura?", "acceptedAnswer": {"@type": "Answer", "text": "La bolsa trae válvula y cierre hermético: saca el aire, ciérrala bien y guárdala en un lugar fresco, seco y sin sol. No la metas al refrigerador. Ya abierta, tiene su mejor sabor en las siguientes 3 a 4 semanas."}}, {"@type": "Question", "name": "¿Cómo hago mi pedido?", "acceptedAnswer": {"@type": "Answer", "text": "Elige tu café, agrégalo al carrito, toca Continuar, llena tus datos de entrega y toca Hacer pedido. Te confirmamos por WhatsApp. Ver el video de cómo pedir."}}, {"@type": "Question", "name": "¿Cómo puedo pagar?", "acceptedAnswer": {"@type": "Answer", "text": "Por transferencia, con tarjeta (te mandamos un link de pago seguro) o contra entrega. Los datos para transferencia te los enviamos solo por WhatsApp."}}, {"@type": "Question", "name": "¿Dónde entregan y cuándo llega?", "acceptedAnswer": {"@type": "Answer", "text": "Entregamos a domicilio en Monterrey y su área metropolitana. Al confirmar tu pedido por WhatsApp acordamos contigo el día y la hora de entrega."}}, {"@type": "Question", "name": "¿Hacen envíos fuera de Monterrey?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, a todo México. Te cotizamos el envío por WhatsApp antes de cobrar; pagas hasta que aceptes la cotización."}}, {"@type": "Question", "name": "¿Tienen precio para cafeterías o negocios?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Al hacer tu pedido elige “Para mi negocio” y te contactamos para validar el precio de mayoreo."}}, {"@type": "Question", "name": "¿Tienen promociones o códigos de descuento?", "acceptedAnswer": {"@type": "Answer", "text": "En fechas especiales publicamos códigos de descuento. Síguenos en Instagram, Facebook y TikTok para no perdértelos, y escribe el código en el paso de datos de entrega."}}, {"@type": "Question", "name": "¿Puedo cambiar o cancelar mi pedido?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, escríbenos por WhatsApp antes de la entrega y lo ajustamos. Consulta los términos de entrega, cambios y devoluciones."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Es de cafetera o soluble?", "acceptedAnswer": {"@type": "Answer", "text": "Es café 100% de grano para cafetera, no soluble. Lo vendemos en grano o molido (molienda media), listo para cafetera de goteo, filtro o café de olla."}}, {"@type": "Question", "name": "¿Qué café manejan?", "acceptedAnswer": {"@type": "Answer", "text": "Hoy tenemos Café Finca Negra, de Zapoapan de Cabañas, Veracruz, en tueste Americano (suave) y Europeo (intenso). Pronto, más orígenes de México."}}, {"@type": "Question", "name": "¿Qué diferencia hay entre el Americano y el Europeo?", "acceptedAnswer": {"@type": "Answer", "text": "Es el mismo café; cambia el tueste. El Americano es más claro: sabor suave, menos amargo, ideal para tomarlo solo. El Europeo es más oscuro: sabor intenso y con más cuerpo, ideal con leche (capuchino, latte) o en cafetera italiana. Si lo tomas solo, Americano; si le pones leche, Europeo."}}, {"@type": "Question", "name": "¿Qué presentaciones tienen?", "acceptedAnswer": {"@type": "Answer", "text": "Bolsas de 250 g, 500 g y 1 kg, en grano o molido, de los dos tuestes. También bombones en paquete chico y grande. La de 250 g es ideal para probar; la de 1 kg rinde más por tu dinero."}}, {"@type": "Question", "name": "¿Qué son los bombones?", "acceptedAnswer": {"@type": "Answer", "text": "Son el acompañante para tu café y un buen detalle para regalar. Vienen en celofán con sellado hermético; ya abiertos, cierra bien la bolsa y guárdalos en lugar fresco y seco."}}, {"@type": "Question", "name": "¿Grano o molido?", "acceptedAnswer": {"@type": "Answer", "text": "Molido: abres y preparas, sin molino. En grano: si tienes molino o cafetera de espresso; conserva mejor su aroma porque lo mueles justo antes de prepararlo."}}, {"@type": "Question", "name": "¿Sirve para mi cafetera?", "acceptedAnswer": {"@type": "Answer", "text": "El molido trae molienda media: perfecto para cafetera de goteo con filtro, V60, Chemex y café de olla. Para espresso se necesita molienda fina: pide el café en grano. En prensa francesa funciona, aunque puede quedar un poco de asiento."}}, {"@type": "Question", "name": "¿Cuánto café uso por taza?", "acceptedAnswer": {"@type": "Answer", "text": "Unas 2 cucharadas soperas rasas (10 g) por taza de 180 ml, con agua caliente sin hervir (90 a 96 °C). Ajusta al gusto: más café, más intenso."}}, {"@type": "Question", "name": "¿Cómo lo conservo y cuánto dura?", "acceptedAnswer": {"@type": "Answer", "text": "La bolsa trae válvula y cierre hermético: saca el aire, ciérrala bien y guárdala en un lugar fresco, seco y sin sol. No la metas al refrigerador. Ya abierta, tiene su mejor sabor en las siguientes 3 a 4 semanas."}}, {"@type": "Question", "name": "¿Cómo hago mi pedido?", "acceptedAnswer": {"@type": "Answer", "text": "Elige tu café, agrégalo al carrito, toca Continuar, llena tus datos de entrega y toca Hacer pedido. Te confirmamos por WhatsApp. Ver el video de cómo pedir."}}, {"@type": "Question", "name": "¿Cómo puedo pagar?", "acceptedAnswer": {"@type": "Answer", "text": "Por transferencia, con tarjeta (te mandamos un link de pago seguro) o contra entrega. Los datos para transferencia te los enviamos solo por WhatsApp."}}, {"@type": "Question", "name": "¿Dónde entregan y cuándo llega?", "acceptedAnswer": {"@type": "Answer", "text": "Entregamos a domicilio en Monterrey y su área metropolitana. Al confirmar tu pedido por WhatsApp acordamos contigo el día y la hora de entrega."}}, {"@type": "Question", "name": "¿Hacen envíos fuera de Monterrey?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, a todo México. Te cotizamos el envío por WhatsApp antes de cobrar; pagas hasta que aceptes la cotización."}}, {"@type": "Question", "name": "¿Tienen precio para cafeterías o negocios?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Al hacer tu pedido elige “Para mi negocio” y te contactamos para validar el precio de mayoreo."}}, {"@type": "Question", "name": "¿Tienen promociones o códigos de descuento?", "acceptedAnswer": {"@type": "Answer", "text": "En fechas especiales publicamos códigos de descuento. Síguenos en Instagram, Facebook y TikTok para no perdértelos, y escribe el código en tu carrito. Cuando hay una promoción general (como El Buen Fin), se aplica sola, sin código."}}, {"@type": "Question", "name": "¿Puedo cambiar o cancelar mi pedido?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, escríbenos por WhatsApp antes de la entrega y lo ajustamos. Consulta los términos de entrega, cambios y devoluciones."}}]}</script>
 <nav class="redes" aria-label="Redes sociales de Casa Zavala">
   <a href="https://www.instagram.com/casazavalamty" target="_blank" rel="noopener" aria-label="Instagram @casazavalamty" title="Instagram @casazavalamty"><img src="img/redes/instagram.webp" alt="Instagram" width="40" height="40" loading="lazy"></a>
   <a href="https://www.facebook.com/CasaZavalaMty" target="_blank" rel="noopener" aria-label="Facebook Casa Zavala" title="Facebook Casa Zavala"><img src="img/redes/facebook.webp" alt="Facebook" width="40" height="40" loading="lazy"></a>
@@ -415,6 +427,7 @@ const nombreCorto = nombreLargo;
 let catalogo = [];
 let whatsapp = 'https://wa.me/528115088658';
 let carrito = leer('cz_carrito', {});   // {sku: cantidad}
+let promoAuto = null;   // descuento automático vigente que manda la API: {codigo, promo, pct, minimo, aplica, hasta, tope}
 const filtro = {categoria: 'Café', proveedor: 'Todas', tueste: 'Todos', presentacion: 'Todos', tamano: 'Todos', origen: 'Todos'};
 if (!MODO_DEV) $('#aviso-dev').remove();
 
@@ -465,6 +478,8 @@ async function refrescar(mostrarError) {
 function usarCatalogo(d) {
   catalogo = d.productos || [];
   if (d.whatsapp) whatsapp = d.whatsapp;
+  promoAuto = d.promo && Number(d.promo.pct) > 0 && Number(d.promo.pct) < 1 ? d.promo : null;
+  pintarPromoBarra();
   $('#link-wa').href = whatsapp;
   $('#dudas-wa').href = whatsapp;
   $('#redes-wa').href = whatsapp;
@@ -555,7 +570,7 @@ function pintarLista() {
       <div class="info">
         <h3 data-ver="${esc(p.sku)}">${tituloHtml(p)}</h3>
         ${sabor ? `<span class="sabor ${sabor === 'Suave' ? 'suave' : 'intenso'}">${sabor}</span>` : p.tamano && p.categoria === 'Bombones' ? `<span class="sabor">${esc(p.tamano)}</span>` : ''}
-        <div class="precio">${pesos(p.precio)}</div>${precioLista(p)}
+        <div class="precio">${pesos(p.precio)}</div>${precioLista(p)}${promoAuto && autoAplicaA(p) ? `<span class="badge-promo">−${pctTxt(promoAuto.pct)} en tu carrito</span>` : ''}
         <button class="agregar" data-sku="${esc(p.sku)}" ${p.hay ? '' : 'disabled'}>${p.hay ? (carrito[p.sku] ? `En carrito (${carrito[p.sku]})` : 'Agregar') : 'Agotado'}</button>
       </div></article>`;
   }).join('');
@@ -772,11 +787,29 @@ function pintarCarrito() {
         <button class="quitar" data-sku="${esc(p.sku)}" data-d="-99">Quitar</button></div>
       <div class="cant"><button data-sku="${esc(p.sku)}" data-d="-1" aria-label="Menos">−</button><b>${c}</b><button data-sku="${esc(p.sku)}" data-d="1" aria-label="Más">+</button></div>
     </div>`).join('');
-  const total = ls.reduce((a, {p, c}) => a + p.precio * c, 0);
-  $('#pie').innerHTML = `<div class="total"><span>Subtotal</span><span>${pesos(total)}</span></div>
+  // Descuentos antes de pedir: aviso del descuento automático, campo de código y desglose
+  $('#cuerpo').insertAdjacentHTML('beforeend', `<div class="bloque-desc">
+      <div id="promo-carrito"></div>
+      <details class="mas" id="caja-codigo"${codigoTexto ? ' open' : ''}><summary>¿Tienes un código de descuento?</summary>
+        <label>Código de descuento<span class="fila-codigo"><input id="codigo" autocomplete="off" autocapitalize="characters" value="${esc(codigoTexto)}" placeholder="Ej. CUMPLE"><button type="button" class="aplicar" id="aplicar-codigo">Aplicar</button></span></label>
+        <p class="estado-codigo" id="estado-codigo" aria-live="polite"></p>
+      </details>
+      <div class="desglose" id="resumen-total"></div>
+    </div>`);
+  $('#pie').innerHTML = `<div class="total"><span>Total</span><span id="total-pie"></span></div><p class="ahorro-pie" id="ahorro-pie" hidden></p>
     <p class="nota">Te confirmamos el total por WhatsApp. <a href="terminos.html" target="_blank" rel="noopener">Entregas y cambios</a></p>
     <button class="principal" id="ir-datos">Continuar</button>`;
   $('#ir-datos').onclick = () => { vista = 'datos'; pintarDatos(); };
+  $('#aplicar-codigo').onclick = () => revisarCodigo($('#codigo').value);
+  $('#codigo').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); revisarCodigo(e.target.value); } });
+  $('#codigo').addEventListener('input', e => {
+    borradorCodigo = e.target.value;
+    if (codigoOk && norm(codigoOk.texto) !== norm(e.target.value)) { codigoOk = null; ponerEstado('', ''); pintarResumen(); }
+  });
+  if (borradorCodigo && norm(borradorCodigo) !== norm(codigoTexto)) $('#codigo').value = borradorCodigo;
+  ponerEstado(estadoCodigo.texto, estadoCodigo.clase);
+  pintarResumen();
+  if (codigoTexto && !codigoOk && !revisado) revisarCodigo(codigoTexto, true);
 }
 $('#cuerpo').addEventListener('click', e => {
   const b = e.target.closest('[data-d]'); if (!b) return;
@@ -827,9 +860,7 @@ function pintarDatos(error) {
     <label id="ciudad-wrap" hidden>Ciudad y estado<input name="ciudad" value="${esc(d.ciudad)}" placeholder="Ej. Saltillo, Coahuila"></label>
     <label>Calle y número<input name="calle" required autocomplete="address-line1" value="${esc(d.calle)}" placeholder="Ej. Av. Juárez 123"></label>
     <label>Indicaciones para el repartidor <span class="opc">(opcional)</span><textarea name="notas" maxlength="300" placeholder="Ej. casa blanca, portón negro">${esc(d.notas)}</textarea></label>
-    <details class="mas"${d.codigo || d.tipo === 'B2B' ? ' open' : ''}><summary>¿Tienes código de descuento o compras para tu negocio?</summary>
-      <label>Código de descuento<span class="fila-codigo"><input name="codigo" id="codigo" autocomplete="off" autocapitalize="characters" value="${esc(d.codigo)}" placeholder="Ej. BUENFIN"><button type="button" class="aplicar" id="aplicar-codigo">Aplicar</button></span></label>
-      <p class="estado-codigo" id="estado-codigo" aria-live="polite"></p>
+    <details class="mas"${d.tipo === 'B2B' ? ' open' : ''}><summary>¿Compras para tu negocio?</summary>
       <label>¿Para quién es?<select name="tipo"><option value="B2C">Para mi casa u oficina</option><option value="B2B" ${d.tipo === 'B2B' ? 'selected' : ''}>Para mi negocio (te contactamos para validar)</option></select></label>
     </details>
     <p class="aviso">Usamos tus datos solo para preparar y entregar tu pedido. <a href="privacidad.html" target="_blank" rel="noopener">Aviso de privacidad</a> · <a href="terminos.html" target="_blank" rel="noopener">Términos</a></p>
@@ -842,12 +873,8 @@ function pintarDatos(error) {
   $('#colonia').addEventListener('change', e => { $('#otra-colonia').hidden = e.target.value !== '__otra'; if (e.target.value === '__otra') $('#forma').coloniaOtra.focus(); });
   cargarCPs();
   if (d.cp) buscarCP(d.cp, d.colonia);
-  // Código de descuento: se revisa con la API antes de hacer el pedido y se muestra el total con descuento
-  $('#aplicar-codigo').onclick = () => revisarCodigo($('#codigo').value);
-  $('#codigo').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); revisarCodigo(e.target.value); } });
-  $('#codigo').addEventListener('input', () => { if (codigoOk && norm(codigoOk.texto) !== norm($('#codigo').value)) { codigoOk = null; $('#estado-codigo').textContent = ''; $('#estado-codigo').className = 'estado-codigo'; pintarResumen(); } });
+  // El desglose (descuento automático y código del carrito) se repite aquí para que el cliente lo vea al pedir
   pintarResumen();
-  if (d.codigo) revisarCodigo(d.codigo, true);
 }
 async function enviar() {
   const f = Object.fromEntries(new FormData($('#forma')).entries());
@@ -857,16 +884,17 @@ async function enviar() {
     : !/^\d{5}$/.test(f.cp) ? 'Escribe tu código postal (5 números).' : zona.cp !== f.cp ? 'Espera un momento: estamos buscando tu colonia.'
     : colonia.length < 3 ? 'Elige o escribe tu colonia.' : zona.nacional && (f.ciudad || '').trim().length < 3 ? 'Escribe tu ciudad y estado.'
     : (f.calle || '').trim().length < 3 ? 'Escribe tu calle y número.' : !lineas().length ? 'Tu carrito está vacío.' : '';
-  guardar('cz_datos', {nombre: f.nombre, telefono: f.telefono, cp: f.cp, colonia, calle: f.calle, ciudad: f.ciudad, notas: f.notas, codigo: f.codigo, tipo: f.tipo});
+  guardar('cz_datos', {nombre: f.nombre, telefono: f.telefono, cp: f.cp, colonia, calle: f.calle, ciudad: f.ciudad, notas: f.notas, codigo: codigoTexto, tipo: f.tipo});
   if (falta) { pintarDatos(falta); return; }
   const direccion = `${f.calle.trim()}, Col. ${colonia}` + (zona.nacional ? `, ${f.ciudad.trim()}` : `, ${zona.municipio}, N.L.`);
-  const envio = {nombre: f.nombre, telefono: tel, direccion, cp: f.cp, municipio: zona.municipio, tipo: f.tipo || 'B2C', codigo: f.codigo || '', notas: f.notas || '', website: f.website || '',
+  const envio = {nombre: f.nombre, telefono: tel, direccion, cp: f.cp, municipio: zona.municipio, tipo: f.tipo || 'B2C', codigo: codigoTexto || '', notas: f.notas || '', website: f.website || '',
     permisoMeta: false, sinPromos: false, envioNacional: zona.nacional, lineas: Object.entries(carrito).map(([sku, cantidad]) => ({sku, cantidad}))};
   const b = $('#enviar'); b.disabled = true; b.textContent = 'Enviando…';
   if (DEMO) {
-    const ls = lineas();
+    const ls = lineas(), t = totales();
     setTimeout(() => { carrito = {}; guardar('cz_carrito', carrito); pintarContador();
-      pintarGracias({ok: true, pedido: 'DEMO-01', mensaje: 'Pedido de prueba: no se registró en ninguna hoja.', total: ls.reduce((a, {p, c}) => a + p.precio * c, 0),
+      pintarGracias({ok: true, pedido: 'DEMO-01', mensaje: 'Pedido de prueba: no se registró en ninguna hoja.', total: t.tot,
+        descuento: {subtotal: t.sub, ahorro: t.ahorro, codigos: [t.autoAplica ? promoAuto.codigo : '', t.ahorroCodigo > 0 ? codigoOk.codigo : ''].filter(Boolean).join(' + '), noAplicados: []},
         lineas: ls.map(({p, c}) => ({cantidad: c, producto: tituloDe(p), tueste: SABOR[p.tueste] || p.tueste, importe: p.precio * c})), whatsapp}, zona.nacional); }, 600);
     return;
   }
@@ -875,43 +903,115 @@ async function enviar() {
     const d = await r.json();
     if (!d.ok) { localStorage.removeItem('cz_catalogo'); refrescar(); pintarDatos(d.error || 'No pudimos registrar tu pedido.'); return; }
     carrito = {}; guardar('cz_carrito', carrito); pintarContador(); localStorage.removeItem('cz_catalogo'); refrescar();
+    codigoTexto = ''; codigoOk = null; ponerEstado('', ''); guardar('cz_codigo', '');   // el código se usa una vez
     pintarGracias(d, zona.nacional);
   } catch (e) {
     pintarDatos('No hubo conexión. Intenta de nuevo o escríbenos por WhatsApp.');
   }
 }
-/* ===== Código de descuento: revisar antes de pedir y mostrar el total =====
-   La API revisa el código (accion=codigo): solo acepta promociones de temporada vigentes. El precio final lo pone
-   la hoja al registrar el pedido; aquí se muestra el estimado con la misma regla (redondeo por pieza). */
-let codigoOk = null;   // {texto, codigo, pct}
-const norm = t => String(t || '').trim().toUpperCase();
+/* ===== Descuentos: automático + código del cliente =====
+   · Descuento automático: la API lo manda con el catálogo (Catálogo, Tipo «Automático», entre Desde y Hasta).
+     Se aplica solo si el carrito llega a la «Compra mínima» y solo a los productos de «Aplica a» (Todo, Café o Bombones).
+   · Código: el cliente lo escribe en el carrito y la API lo revisa (accion=codigo; solo promociones de Temporada vigentes).
+   · Se combinan hasta 2 (el automático primero), uno sobre otro, con el tope de Catálogo. El precio final lo pone la hoja
+     al registrar el pedido; aquí se muestra el estimado con la misma regla (redondeo por pieza). */
+let codigoTexto = norm0(leer('cz_codigo', '') || (leer('cz_datos', {}) || {}).codigo || '');   // código aplicado (o por revisar)
+let codigoOk = null;        // {texto, codigo, codigos:[{codigo,pct}], tope}
+let borradorCodigo = '';    // lo que va escribiendo, para no perderlo al cambiar cantidades
+let revisado = false;       // ya se revisó el código guardado en esta visita
+let estadoCodigo = {texto: '', clase: ''};
+function norm0(t) { return String(t || '').trim().toUpperCase(); }
+const norm = norm0;
+const pctTxt = p => Math.round(Number(p) * 100) + '%';
+const fechaCorta = iso => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || ''); return m ? `${Number(m[3])} de ${['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][m[2] - 1]}` : ''; };
+const normCat = t => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase();
+function autoAplicaA(p) {
+  if (!promoAuto) return false;
+  const a = normCat(promoAuto.aplica), c = normCat(p.categoria);
+  return !a || a === 'todo' || c.indexOf(a) === 0 || a.indexOf(c) === 0;
+}
+function pintarPromoBarra() {
+  const b = $('#promo-barra'); if (!b) return;
+  if (!promoAuto) { b.hidden = true; b.innerHTML = ''; return; }
+  const a = normCat(promoAuto.aplica), solo = a && a !== 'todo' ? ` en ${esc(promoAuto.aplica.toLowerCase())}` : '';
+  b.innerHTML = `<b>${esc(promoAuto.promo)}:</b> ${pctTxt(promoAuto.pct)} de descuento${solo}` +
+    (promoAuto.minimo > 0 ? ` en compras desde ${pesos(promoAuto.minimo)}` : '') + '. Se aplica solo en tu carrito' +
+    (promoAuto.hasta ? `, hasta el ${fechaCorta(promoAuto.hasta)}` : '') + '.';
+  b.hidden = false;
+}
+// % combinado de una lista de códigos (misma regla que la hoja: uno sobre otro, con tope; 100% = regalo)
+function combinar(lista, tope) {
+  if (!lista.length) return 0;
+  if (lista.some(x => x.pct >= 1)) return 1;
+  return Math.min(tope, 1 - lista.reduce((a, x) => a * (1 - x.pct), 1));
+}
 function totales() {
   const ls = lineas(), sub = ls.reduce((a, {p, c}) => a + p.precio * c, 0);
-  const pct = codigoOk ? codigoOk.pct : 0;
-  const tot = ls.reduce((a, {p, c}) => a + Math.round(p.precio * (1 - pct)) * c, 0);
-  return {sub, tot, ahorro: sub - tot};
+  const autoCumple = !!promoAuto && sub >= (Number(promoAuto.minimo) || 0);
+  const tope = Number((codigoOk && codigoOk.tope) || (promoAuto && promoAuto.tope)) || 1;
+  const manual = codigoOk ? (codigoOk.codigos || [{codigo: codigoOk.codigo, pct: codigoOk.pct}]) : [];
+  let tot = 0, conAuto = 0, autoAplica = false;
+  ls.forEach(({p, c}) => {
+    const lleva = autoCumple && autoAplicaA(p);
+    const lista = (lleva ? [{codigo: promoAuto.codigo, pct: Number(promoAuto.pct)}] : [])
+      .concat(manual.filter(m => !lleva || norm(m.codigo) !== norm(promoAuto.codigo))).slice(0, 2);
+    if (lleva) { autoAplica = true; conAuto += Math.round(p.precio * (1 - promoAuto.pct)) * c; }
+    else conAuto += p.precio * c;
+    tot += Math.round(p.precio * (1 - combinar(lista, tope))) * c;
+  });
+  const ahorroAuto = sub - conAuto, ahorro = sub - tot;
+  return {sub, tot, ahorro, ahorroAuto, ahorroCodigo: Math.max(0, ahorro - ahorroAuto), autoAplica,
+          faltaMinimo: promoAuto && !autoCumple ? (Number(promoAuto.minimo) || 0) - sub : 0};
 }
 function pintarResumen() {
-  const r = $('#resumen-total'); if (!r) return;
   const t = totales();
-  r.innerHTML = `<div class="total linea"><span>Subtotal</span><span>${pesos(t.sub)}</span></div>` +
-    (t.ahorro > 0 ? `<div class="total linea descuento"><span>Descuento ${esc(codigoOk.codigo)} (${Math.round(codigoOk.pct * 100)}%)</span><span>−${pesos(t.ahorro)}</span></div>` : '') +
-    `<div class="total"><span>Total${t.ahorro > 0 ? ' con descuento' : ''}</span><span>${pesos(t.tot)}</span></div>`;
+  const r = $('#resumen-total');
+  if (r) {
+    r.innerHTML = `<div class="total linea"><span>Subtotal</span><span>${pesos(t.sub)}</span></div>` +
+      (t.ahorroAuto > 0 ? `<div class="total linea descuento"><span>${esc(promoAuto.promo)} (${pctTxt(promoAuto.pct)} automático)</span><span>−${pesos(t.ahorroAuto)}</span></div>` : '') +
+      (t.ahorroCodigo > 0 ? `<div class="total linea descuento"><span>Código ${esc(codigoOk.codigo)}${t.ahorroAuto > 0 ? '' : ` (${pctTxt(combinar(codigoOk.codigos || [{pct: codigoOk.pct}], Number(codigoOk.tope) || 1))})`}</span><span>−${pesos(t.ahorroCodigo)}</span></div>` : '') +
+      `<div class="total"><span>Total${t.ahorro > 0 ? ' con descuento' : ''}</span><span>${pesos(t.tot)}</span></div>`;
+  }
+  const pc = $('#promo-carrito');
+  if (pc) {
+    pc.className = ''; pc.innerHTML = '';
+    if (promoAuto && t.autoAplica) { pc.className = 'promo-carrito'; pc.innerHTML = `✔ <b>${esc(promoAuto.promo)}</b>: tu ${pctTxt(promoAuto.pct)} de descuento ya está aplicado; no necesitas código.`; }
+    else if (promoAuto && t.faltaMinimo > 0) { pc.className = 'promo-carrito falta'; pc.innerHTML = `Agrega <b>${pesos(t.faltaMinimo)}</b> más y obtén ${pctTxt(promoAuto.pct)} de descuento por <b>${esc(promoAuto.promo)}</b>.`; }
+  }
+  const tp = $('#total-pie'); if (tp) tp.textContent = pesos(t.tot);
+  const ap = $('#ahorro-pie'); if (ap) { ap.hidden = !(t.ahorro > 0); ap.textContent = t.ahorro > 0 ? `Ahorras ${pesos(t.ahorro)}` : ''; }
+}
+function ponerEstado(texto, clase) {
+  estadoCodigo = {texto, clase};
+  const est = $('#estado-codigo'); if (!est) return;
+  est.textContent = texto; est.className = 'estado-codigo' + (clase ? ' ' + clase : '');
 }
 async function revisarCodigo(texto, silencioso) {
-  const est = $('#estado-codigo'), t = norm(texto);
-  if (!t) { codigoOk = null; est.textContent = ''; est.className = 'estado-codigo'; pintarResumen(); return; }
-  est.textContent = 'Revisando código…'; est.className = 'estado-codigo';
+  const t = norm(texto);
+  borradorCodigo = '';
+  if (!t) { codigoOk = null; codigoTexto = ''; guardar('cz_codigo', ''); ponerEstado('', ''); pintarResumen(); return; }
+  if (promoAuto && t === norm(promoAuto.codigo)) {
+    codigoOk = null; codigoTexto = ''; guardar('cz_codigo', '');
+    ponerEstado(`${promoAuto.codigo} se aplica solo en tu carrito; no necesitas escribirlo.`, 'ok'); pintarResumen(); return;
+  }
+  ponerEstado('Revisando código…', '');
   let r = null;
-  try { const res = await fetch(API + '?accion=codigo&c=' + encodeURIComponent(t), {redirect: 'follow'}); r = await res.json(); } catch (e) {}
-  if (norm($('#codigo') && $('#codigo').value) !== t) return;   // el cliente ya cambió el texto
+  if (DEMO) r = t === 'CUMPLE' ? {ok: true, valido: true, codigo: 'CUMPLE', pct: 0.1, tope: 0.3, codigos: [{codigo: 'CUMPLE', pct: 0.1}], mensaje: 'Código CUMPLE aplicado: 10% de descuento.'} : {ok: true, valido: false, mensaje: 'Ese código no es válido.'};
+  else { try { const res = await fetch(API + '?accion=codigo&c=' + encodeURIComponent(t), {redirect: 'follow'}); r = await res.json(); } catch (e) {} }
+  if ($('#codigo') && norm($('#codigo').value) !== t) return;   // el cliente ya cambió el texto
+  revisado = true;
   if (r && r.ok && r.valido) {
-    codigoOk = {texto: t, codigo: r.codigo, pct: Number(r.pct) || 0};
-    est.textContent = '✔ ' + r.mensaje + (r.avisos ? ' ' + r.avisos + '.' : ''); est.className = 'estado-codigo ok';
+    codigoOk = {texto: t, codigo: r.codigo, pct: Number(r.pct) || 0, tope: Number(r.tope) || 0,
+                codigos: (r.codigos || []).map(x => ({codigo: x.codigo, pct: Number(x.pct) || 0}))};
+    if (!codigoOk.codigos.length) codigoOk.codigos = [{codigo: r.codigo, pct: codigoOk.pct}];
+    codigoTexto = t; guardar('cz_codigo', t);
+    ponerEstado('✔ ' + r.mensaje + (r.avisos ? ' ' + r.avisos + '.' : ''), 'ok');
   } else if (r && r.ok) {
-    codigoOk = null; est.textContent = '✖ ' + r.mensaje; est.className = 'estado-codigo error-codigo';
+    codigoOk = null; codigoTexto = ''; guardar('cz_codigo', '');
+    ponerEstado((r.automatico ? '' : '✖ ') + r.mensaje, r.automatico ? 'ok' : 'error-codigo');
   } else {
-    codigoOk = null; if (!silencioso) { est.textContent = 'No pudimos revisar el código ahora; lo revisamos al registrar tu pedido.'; est.className = 'estado-codigo'; }
+    codigoOk = null; codigoTexto = t; guardar('cz_codigo', t);   // sin conexión: se manda igual y la hoja lo revisa
+    if (!silencioso) ponerEstado('No pudimos revisar el código ahora; lo revisamos al registrar tu pedido.', '');
   }
   pintarResumen();
 }
