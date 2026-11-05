@@ -322,6 +322,17 @@ textarea{min-height:64px}
 .desglose .total{font-size:15px}
 .desglose .total:last-child{margin:6px 0 0;padding-top:8px;border-top:1px solid var(--linea);font-size:17px}
 .ahorro-pie{color:var(--verde);font-weight:600;font-size:13.5px;margin:-2px 0 8px}
+/* Ficha del café: perfil en taza y ficha técnica (como las tiendas de especialidad) */
+.ficha-cafe h3{margin:0 0 8px;font-family:Fraunces,serif;font-size:17px}
+.ficha-cafe h3:not(:first-child){margin-top:16px}
+.tabla-ficha{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--linea);border-radius:10px;overflow:hidden;font-size:14px}
+.tabla-ficha th,.tabla-ficha td{padding:9px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--linea);line-height:1.35}
+.tabla-ficha tr:first-child th,.tabla-ficha tr:first-child td{border-top:0}
+.tabla-ficha th{width:34%;font-weight:600;color:var(--cafe);background:#faf5ee}
+.tabla-ficha td.pendiente{color:var(--rojo);font-style:italic}
+.granos{display:inline-flex;gap:3px;vertical-align:-2px;margin-right:6px}
+.granos i{width:11px;height:14px;border-radius:50%;background:var(--linea);display:inline-block;transform:rotate(-25deg)}
+.granos i.on{background:var(--cafe2)}
 </style>
 </head>
 <body>
@@ -412,6 +423,8 @@ const leer = (k, def) => { try { const v = JSON.parse(localStorage.getItem(k)); 
 // Foto limpia (solo el producto) en img/producto/<SKU>.webp; si no existe, la imagen del catálogo
 const FOTO_LIMPIA = new Set(['CZ-VER-1K-GR-AM','CZ-VER-1K-GR-EU','CZ-VER-1K-MO-AM','CZ-VER-1K-MO-EU','CZ-VER-250-GR-AM','CZ-VER-250-GR-EU','CZ-VER-250-MO-AM','CZ-VER-250-MO-EU','CZ-VER-500-GR-AM','CZ-VER-500-GR-EU','CZ-VER-500-MO-AM','CZ-VER-500-MO-EU','CZ-VER-BOM-CH','CZ-VER-BOM-MD']);
 const fotoProducto = p => FOTO_LIMPIA.has(p.sku) ? `img/producto/${p.sku}.webp` : p.imagen;
+// Segunda foto de la ficha: resumen de sabor (img/sabor, una por café). Los bombones no llevan segunda foto.
+const fotoSabor = p => p.categoria !== 'Bombones' && FOTO_LIMPIA.has(p.sku) ? `img/sabor/${p.sku}.webp` : '';
 const SABOR = {Americano: 'Suave', Europeo: 'Intenso'};
 // Precio de lista que se muestra abajo del precio real: precio × (1 + %). Pon 0 para quitarlo.
 const PRECIO_LISTA_PCT = 13;
@@ -635,8 +648,34 @@ function particulas(g) {
 }
 
 const pasos = items => `<ol class="pasos">${items.map(([i, t, d]) => `<li>${ico(i)}<div><b>${t}</b><span>${d}</span></div></li>`).join('')}</ol>`;
+/* ===== Ficha del café: perfil en taza y ficha técnica =====
+   PERFIL: cómo sabe cada tueste (texto nuestro, sencillo). ORIGEN: datos del productor por proveedor (columna
+   Proveedor de la pestaña Tienda). Un dato vacío no se muestra; llénalo cuando el proveedor lo confirme. */
+const MOSTRAR_PENDIENTES = false;   // true = muestra en rojo los datos que faltan pedir al proveedor (solo para revisar)
+const PERFIL = {
+  Americano: {aroma: 'Dulce, a café recién tostado.', sabor: 'Suave y redondo, con dulzor natural y poco amargor.', cuerpo: 'Medio', intensidad: 2, nivel: 'Suave'},
+  Europeo: {aroma: 'Intenso, a grano bien tostado.', sabor: 'Intenso, con amargor agradable. Aguanta bien la leche.', cuerpo: 'Completo', intensidad: 4, nivel: 'Intensa'}
+};
+const ORIGEN = {
+  'Finca Negra': {productor: 'Finca Negra · «El Café de los Tuxtlas»', origen: 'Zapoapan de Cabañas, Veracruz', region: 'Los Tuxtlas',
+                  variedad: '', altura: '', proceso: ''}
+};
+function fichaCafe(p) {
+  const pf = PERFIL[p.tueste], o = ORIGEN[p.proveedor] || {};
+  const fila = (k, v) => v ? `<tr><th>${esc(k)}</th><td>${v}</td></tr>` : MOSTRAR_PENDIENTES ? `<tr><th>${esc(k)}</th><td class="pendiente">Por confirmar con el proveedor</td></tr>` : '';
+  const granos = n => `<span class="granos" aria-hidden="true">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`;
+  const perfil = pf ? `<h3>Perfil en taza</h3><table class="tabla-ficha">
+      ${fila('Aroma', esc(pf.aroma))}${fila('Sabor', esc(pf.sabor))}${fila('Cuerpo', esc(pf.cuerpo))}
+      ${fila('Intensidad', granos(pf.intensidad) + esc(pf.nivel))}</table>` : '';
+  const tecnica = `<h3>Ficha técnica</h3><table class="tabla-ficha">
+      ${fila('Productor', esc(o.productor || p.proveedor))}${fila('Origen', esc(o.origen || p.origen))}${'region' in o ? fila('Región', esc(o.region)) : ''}
+      ${'variedad' in o ? fila('Variedad', esc(o.variedad)) : ''}${'altura' in o ? fila('Altura', esc(o.altura)) : ''}${'proceso' in o ? fila('Proceso', esc(o.proceso)) : ''}
+      ${fila('Tueste', esc(p.tueste + (SABOR[p.tueste] ? ' · ' + SABOR[p.tueste].toLowerCase() : '')))}
+      ${fila('Molienda', /grano/i.test(p.presentacion || '') ? 'En grano entero' : 'Media (para filtro)')}</table>`;
+  return `<div class="bloque ficha-cafe">${perfil}${tecnica}</div>`;
+}
 function bloqueTueste(t) {
-  return `<div class="bloque"><div class="bloque-cab">${ico(t.icono, 'grande')}<div><h3>${esc(t.titulo)}</h3><p>${esc(t.texto)}</p></div></div>
+  return `<div class="bloque"><div class="bloque-cab">${ico(t.icono, 'grande')}<div><h3>${esc(t.titulo)}</h3></div></div>
     <p class="sub">Ideal para</p><ul class="metodos">${t.ideal.map(([i, l]) => `<li>${ico(i)}<span>${esc(l)}</span></li>`).join('')}</ul></div>`;
 }
 function prepCafe(p) {
@@ -689,8 +728,8 @@ function abrirFicha(sku, origen) {
   $('#ficha').innerHTML = `<button class="ficha-cerrar" id="ficha-cerrar" aria-label="Cerrar">×</button>
     <div class="ficha-foto">
       <div class="zoom" id="zoom">${fotoProducto(p) ? `<img id="zoom-img" src="${esc(fotoProducto(p))}" alt="${esc(nombreCorto(p))}" draggable="false">` : `<div class="sin">${esc(titulo)}</div>`}</div>
-      ${p.imagen && fotoProducto(p) !== p.imagen ? `<div class="miniaturas"><button class="mini-foto activa" data-src="${esc(fotoProducto(p))}"><img src="${esc(fotoProducto(p))}" alt="">Producto</button><button class="mini-foto" data-src="${esc(p.imagen)}"><img src="${esc(p.imagen)}" alt="" loading="lazy">Ficha completa</button></div>` : ''}
-      ${p.imagen ? `<div class="zoom-ctl"><span id="zoom-ayuda">Toca la foto para acercar.</span><button id="zoom-btn" aria-pressed="false">Acercar +</button></div>` : ''}
+      ${fotoSabor(p) ? `<div class="miniaturas"><button class="mini-foto activa" data-src="${esc(fotoProducto(p))}"><img src="${esc(fotoProducto(p))}" alt="">Producto</button><button class="mini-foto" data-src="${esc(fotoSabor(p))}"><img src="${esc(fotoSabor(p))}" alt="" loading="lazy">Perfil en taza</button></div>` : ''}
+      ${fotoProducto(p) ? `<div class="zoom-ctl"><span id="zoom-ayuda">Toca la foto para acercar.</span><button id="zoom-btn" aria-pressed="false">Acercar +</button></div>` : ''}
     </div>
     <div class="ficha-info">
       <div class="meta">${esc([p.proveedor, p.origen].filter(Boolean).join(' · '))}</div>
@@ -703,6 +742,7 @@ function abrirFicha(sku, origen) {
         ? `<div class="cant"><button data-fd="-1" aria-label="Menos">−</button><b id="ficha-cant">${carrito[p.sku] || 0}</b><button data-fd="1" aria-label="Más">+</button></div>
            <button class="principal" id="ficha-agregar">${carrito[p.sku] ? 'Ver carrito' : 'Agregar al carrito'}</button>`
         : `<button class="principal" disabled>Agotado</button>`}</div>
+      ${cafe ? fichaCafe(p) : ''}
       ${t ? bloqueTueste(t) : ''}
       ${cafe ? prepCafe(p) : prepBombon()}
       <a class="link-dudas" href="${esc(dudas)}" target="_blank" rel="noopener">¿Dudas sobre este producto? Escríbenos por WhatsApp</a>
