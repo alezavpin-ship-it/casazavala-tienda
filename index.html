@@ -458,7 +458,10 @@ let catalogo = [];
 let whatsapp = 'https://wa.me/528115088658';
 let carrito = leer('cz_carrito', {});   // {sku: cantidad}
 let promoAuto = null;   // descuento automático vigente que manda la API: {codigo, promo, pct, minimo, aplica, hasta, tope}
-const filtro = {categoria: 'Café', proveedor: 'Todas', tueste: 'Todos', presentacion: 'Todos', tamano: 'Todos', origen: 'Todos'};
+// Al abrir la tienda, el café se muestra en 250 g (el que más se vende y mejor margen); «Ver todos» quita el filtro.
+const TAMANO_INICIAL = '250 g';
+const filtro = {categoria: 'Café', proveedor: 'Todas', tueste: 'Todos', presentacion: 'Todos', tamano: TAMANO_INICIAL, origen: 'Todos'};
+const tamanoInicial = () => catalogo.some(p => p.categoria === 'Café' && p.tamano === TAMANO_INICIAL) ? TAMANO_INICIAL : 'Todos';
 if (!MODO_DEV) $('#aviso-dev').remove();
 
 /* ===== Logo de temporada ===== */
@@ -516,6 +519,7 @@ function usarCatalogo(d) {
   // Quita del carrito lo que ya no existe
   Object.keys(carrito).forEach(s => { if (!catalogo.find(p => p.sku === s)) delete carrito[s]; });
   guardar('cz_carrito', carrito);
+  if (filtro.tamano === TAMANO_INICIAL && filtro.categoria === 'Café') filtro.tamano = tamanoInicial();   // si no hay 250 g, se ven todos
   pintarFiltros(); pintarLista(); pintarContador();
   abrirEnlaceProducto();
 }
@@ -535,6 +539,7 @@ function abrirEnlaceProducto() {
   try { const u = new URL(location.href); u.searchParams.delete('sku'); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e) {}
   if (!p) return;
   if (p.categoria && filtro.categoria !== p.categoria) { filtro.categoria = p.categoria; Object.assign(filtro, SIN_FILTRO); pintarFiltros(); pintarLista(); }
+  if (filtro.tamano !== 'Todos' && p.tamano !== filtro.tamano) { filtro.tamano = 'Todos'; pintarFiltros(); pintarLista(); }   // que se vea el producto del link
   if (!p.hay) { pintarLista(); return; }
   if (!carrito[p.sku]) cambiar(p.sku, +1);
   pintarLista();
@@ -576,7 +581,7 @@ $('#filtros').addEventListener('click', e => {
   if (e.target.id === 'limpiar') { Object.assign(filtro, SIN_FILTRO); pintarFiltros(); pintarLista(); return; }
   const b = e.target.closest('.chip'); if (!b) return;
   filtro[b.dataset.campo] = b.dataset.valor;
-  if (b.dataset.campo === 'categoria') Object.assign(filtro, SIN_FILTRO);
+  if (b.dataset.campo === 'categoria') { Object.assign(filtro, SIN_FILTRO); if (b.dataset.valor === 'Café') filtro.tamano = tamanoInicial(); }
   pintarFiltros(); pintarLista();
 });
 $('#filtros').addEventListener('change', e => {
