@@ -300,6 +300,17 @@ textarea{min-height:64px}
 .faq-a a{color:var(--verde);font-weight:600}
 .link-faq{display:inline-block;margin:-10px 0 18px;color:var(--crema);font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px;opacity:.9}
 @media (max-width:520px){.faq-a{padding-left:18px}.faq-q{font-size:16px}}
+/* Código de descuento */
+.fila-codigo{display:flex;gap:8px}
+.fila-codigo input{flex:1;min-width:0;text-transform:uppercase}
+.aplicar{flex:none;border:1.5px solid var(--verde);background:#fff;color:var(--verde);border-radius:10px;padding:0 16px;font-weight:700;cursor:pointer;min-height:46px}
+.estado-codigo{margin:-2px 0 0;font-size:13.5px;color:var(--gris)}
+.estado-codigo:empty{display:none}
+.estado-codigo.ok{color:var(--verde);font-weight:600}
+.estado-codigo.error-codigo{color:var(--rojo)}
+.total.linea{font-weight:400;font-size:14.5px;color:var(--gris);margin-bottom:2px}
+.total.descuento,.ok tr.descuento td{color:var(--verde);font-weight:600}
+.aviso-codigo{background:#fff5e0;border:1px solid #efd9a8;border-radius:10px;padding:8px 10px;color:#5b4320}
 </style>
 </head>
 <body>
@@ -817,19 +828,26 @@ function pintarDatos(error) {
     <label>Calle y número<input name="calle" required autocomplete="address-line1" value="${esc(d.calle)}" placeholder="Ej. Av. Juárez 123"></label>
     <label>Indicaciones para el repartidor <span class="opc">(opcional)</span><textarea name="notas" maxlength="300" placeholder="Ej. casa blanca, portón negro">${esc(d.notas)}</textarea></label>
     <details class="mas"${d.codigo || d.tipo === 'B2B' ? ' open' : ''}><summary>¿Tienes código de descuento o compras para tu negocio?</summary>
-      <label>Código de descuento<input name="codigo" autocomplete="off" value="${esc(d.codigo)}"></label>
+      <label>Código de descuento<span class="fila-codigo"><input name="codigo" id="codigo" autocomplete="off" autocapitalize="characters" value="${esc(d.codigo)}" placeholder="Ej. BUENFIN"><button type="button" class="aplicar" id="aplicar-codigo">Aplicar</button></span></label>
+      <p class="estado-codigo" id="estado-codigo" aria-live="polite"></p>
       <label>¿Para quién es?<select name="tipo"><option value="B2C">Para mi casa u oficina</option><option value="B2B" ${d.tipo === 'B2B' ? 'selected' : ''}>Para mi negocio (te contactamos para validar)</option></select></label>
     </details>
     <p class="aviso">Usamos tus datos solo para preparar y entregar tu pedido. <a href="privacidad.html" target="_blank" rel="noopener">Aviso de privacidad</a> · <a href="terminos.html" target="_blank" rel="noopener">Términos</a></p>
     <div class="trampa" aria-hidden="true"><label>Sitio web<input name="website" tabindex="-1" autocomplete="off"></label></div>
   </form>`;
-  $('#pie').innerHTML = `<button class="principal" id="enviar">Hacer pedido<small class="sub-boton">Te confirmamos por WhatsApp</small></button><button class="secundario" id="volver">Volver al carrito</button>`;
+  $('#pie').innerHTML = `<div id="resumen-total"></div><button class="principal" id="enviar">Hacer pedido<small class="sub-boton">Te confirmamos por WhatsApp</small></button><button class="secundario" id="volver">Volver al carrito</button>`;
   $('#volver').onclick = () => { vista = 'carrito'; pintarCarrito(); };
   $('#enviar').onclick = enviar;
   $('#cp').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5); buscarCP(e.target.value); });
   $('#colonia').addEventListener('change', e => { $('#otra-colonia').hidden = e.target.value !== '__otra'; if (e.target.value === '__otra') $('#forma').coloniaOtra.focus(); });
   cargarCPs();
   if (d.cp) buscarCP(d.cp, d.colonia);
+  // Código de descuento: se revisa con la API antes de hacer el pedido y se muestra el total con descuento
+  $('#aplicar-codigo').onclick = () => revisarCodigo($('#codigo').value);
+  $('#codigo').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); revisarCodigo(e.target.value); } });
+  $('#codigo').addEventListener('input', () => { if (codigoOk && norm(codigoOk.texto) !== norm($('#codigo').value)) { codigoOk = null; $('#estado-codigo').textContent = ''; $('#estado-codigo').className = 'estado-codigo'; pintarResumen(); } });
+  pintarResumen();
+  if (d.codigo) revisarCodigo(d.codigo, true);
 }
 async function enviar() {
   const f = Object.fromEntries(new FormData($('#forma')).entries());
@@ -862,6 +880,41 @@ async function enviar() {
     pintarDatos('No hubo conexión. Intenta de nuevo o escríbenos por WhatsApp.');
   }
 }
+/* ===== Código de descuento: revisar antes de pedir y mostrar el total =====
+   La API revisa el código (accion=codigo): solo acepta promociones de temporada vigentes. El precio final lo pone
+   la hoja al registrar el pedido; aquí se muestra el estimado con la misma regla (redondeo por pieza). */
+let codigoOk = null;   // {texto, codigo, pct}
+const norm = t => String(t || '').trim().toUpperCase();
+function totales() {
+  const ls = lineas(), sub = ls.reduce((a, {p, c}) => a + p.precio * c, 0);
+  const pct = codigoOk ? codigoOk.pct : 0;
+  const tot = ls.reduce((a, {p, c}) => a + Math.round(p.precio * (1 - pct)) * c, 0);
+  return {sub, tot, ahorro: sub - tot};
+}
+function pintarResumen() {
+  const r = $('#resumen-total'); if (!r) return;
+  const t = totales();
+  r.innerHTML = `<div class="total linea"><span>Subtotal</span><span>${pesos(t.sub)}</span></div>` +
+    (t.ahorro > 0 ? `<div class="total linea descuento"><span>Descuento ${esc(codigoOk.codigo)} (${Math.round(codigoOk.pct * 100)}%)</span><span>−${pesos(t.ahorro)}</span></div>` : '') +
+    `<div class="total"><span>Total${t.ahorro > 0 ? ' con descuento' : ''}</span><span>${pesos(t.tot)}</span></div>`;
+}
+async function revisarCodigo(texto, silencioso) {
+  const est = $('#estado-codigo'), t = norm(texto);
+  if (!t) { codigoOk = null; est.textContent = ''; est.className = 'estado-codigo'; pintarResumen(); return; }
+  est.textContent = 'Revisando código…'; est.className = 'estado-codigo';
+  let r = null;
+  try { const res = await fetch(API + '?accion=codigo&c=' + encodeURIComponent(t), {redirect: 'follow'}); r = await res.json(); } catch (e) {}
+  if (norm($('#codigo') && $('#codigo').value) !== t) return;   // el cliente ya cambió el texto
+  if (r && r.ok && r.valido) {
+    codigoOk = {texto: t, codigo: r.codigo, pct: Number(r.pct) || 0};
+    est.textContent = '✔ ' + r.mensaje + (r.avisos ? ' ' + r.avisos + '.' : ''); est.className = 'estado-codigo ok';
+  } else if (r && r.ok) {
+    codigoOk = null; est.textContent = '✖ ' + r.mensaje; est.className = 'estado-codigo error-codigo';
+  } else {
+    codigoOk = null; if (!silencioso) { est.textContent = 'No pudimos revisar el código ahora; lo revisamos al registrar tu pedido.'; est.className = 'estado-codigo'; }
+  }
+  pintarResumen();
+}
 function pintarGracias(d, nacional) {
   nacional = nacional || d.envioNacional;
   vista = 'gracias';
@@ -870,7 +923,9 @@ function pintarGracias(d, nacional) {
   else {
     $('#cuerpo').innerHTML = `<div class="ok"><h3>Pedido ${esc(d.pedido)}</h3><p>${esc(d.mensaje)}</p>
       <table>${(d.lineas || []).map(l => `<tr><td>${l.cantidad} × ${esc(l.producto)}${l.tueste ? ' · ' + esc(l.tueste) : ''}</td><td>${pesos(l.importe)}</td></tr>`).join('')}
+      ${d.descuento && d.descuento.ahorro > 0 ? `<tr><td>Subtotal</td><td>${pesos(d.descuento.subtotal)}</td></tr><tr class="descuento"><td>Descuento${d.descuento.codigos ? ' ' + esc(d.descuento.codigos) : ''}</td><td>−${pesos(d.descuento.ahorro)}</td></tr>` : ''}
       <tr><td><b>Total</b></td><td><b>${pesos(d.total)}</b></td></tr></table>
+      ${d.descuento && d.descuento.noAplicados && d.descuento.noAplicados.length ? `<p class="nota aviso-codigo">No se aplicó el código: ${esc(d.descuento.noAplicados.join(', '))}. Si crees que es un error, escríbenos por WhatsApp.</p>` : ''}
       <p class="nota">${nacional
         ? 'Envío nacional: te escribimos por WhatsApp con la cotización del envío. El pago se hace después de que aceptes la cotización; no pagues antes.'
         : 'Puedes pagar con tarjeta, por transferencia (te mandamos los datos por WhatsApp) o contra entrega.'}</p></div>`;
