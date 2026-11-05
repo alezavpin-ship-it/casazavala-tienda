@@ -148,7 +148,7 @@ footer a{color:var(--verde)}
 .ficha{align-content:start;background:var(--papel);border-radius:18px;width:min(940px,100%);max-height:calc(100vh - 32px);overflow:auto;position:relative;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 18px 60px rgba(0,0,0,.35)}
 .ficha-cerrar{position:absolute;top:10px;right:10px;z-index:3;width:38px;height:38px;border-radius:50%;border:0;background:#fff;color:var(--cafe);font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .ficha-foto{position:sticky;top:0;align-self:start;padding:16px}
-.zoom{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#efe4d4;cursor:zoom-in;touch-action:pan-y}
+.zoom{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#efe4d4;cursor:zoom-in;touch-action:pan-x pan-y}
 .zoom img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s ease;transform-origin:50% 50%;user-select:none;-webkit-user-drag:none}
 .zoom.activo{cursor:zoom-out;touch-action:none}
 .zoom.activo img{transform:scale(2.5);transition:transform .25s ease,transform-origin .05s linear}
@@ -333,6 +333,23 @@ textarea{min-height:64px}
 .granos{display:inline-flex;gap:3px;vertical-align:-2px;margin-right:6px}
 .granos i{width:11px;height:14px;border-radius:50%;background:var(--linea);display:inline-block;transform:rotate(-25deg)}
 .granos i.on{background:var(--cafe2)}
+/* Fotos deslizables (tarjetas y detalle): un carril con scroll-snap; puntitos y flechas en escritorio */
+.carril{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+.carril::-webkit-scrollbar{display:none}
+.carril>img{flex:0 0 100%;width:100%;height:100%;scroll-snap-align:center;scroll-snap-stop:always}
+.foto .carril>img{object-fit:contain;padding:6%;opacity:0;transition:opacity .35s ease}
+.foto.lista .carril>img{opacity:1}
+.foto .carril>img.sabor,.zoom .carril>img.sabor{object-fit:cover;padding:0}
+.puntos{position:absolute;left:50%;bottom:9px;transform:translateX(-50%);display:flex;gap:6px;z-index:2;pointer-events:none}
+.puntos i{width:7px;height:7px;border-radius:50%;background:rgba(43,29,21,.25);transition:background .2s,width .2s}
+.puntos i.on{background:var(--verde);width:18px;border-radius:999px}
+.flecha{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--cafe);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);display:none}
+.flecha.izq{left:8px}.flecha.der{right:8px}
+@media (hover:hover) and (pointer:fine){.foto:hover .flecha,.zoom:hover .flecha{display:block}}
+.zoom .carril>img{object-fit:cover}
+.zoom.activo .carril{overflow:hidden;touch-action:none}
+.zoom.activo .flecha,.zoom.activo .puntos{display:none}
+.zoom .lupa{display:none}
 </style>
 </head>
 <body>
@@ -569,6 +586,23 @@ $('#filtros').addEventListener('change', e => {
 });
 
 /* ===== Lista de productos ===== */
+/* ===== Fotos deslizables =====
+   Carril horizontal con scroll-snap: en celular se desliza con el dedo; en computadora salen flechas al pasar el mouse.
+   Los puntitos marcan qué foto se ve. Un toque (sin deslizar) abre el detalle, como antes. */
+const controlesCarril = n => `<button type="button" class="flecha izq" aria-label="Foto anterior" tabindex="-1">‹</button><button type="button" class="flecha der" aria-label="Foto siguiente" tabindex="-1">›</button><div class="puntos" aria-hidden="true">${Array.from({length: n}, (_, i) => `<i${i ? '' : ' class="on"'}></i>`).join('')}</div>`;
+const indiceCarril = c => Math.round(c.scrollLeft / Math.max(1, c.clientWidth));
+function ponerPuntos(c) {
+  const i = indiceCarril(c), p = c.parentNode.querySelector('.puntos');
+  if (p) [...p.children].forEach((x, k) => x.classList.toggle('on', k === i));
+}
+function moverCarril(fl) {
+  const c = fl.parentNode.querySelector('.carril'); if (!c) return;
+  const n = c.children.length, i = indiceCarril(c), d = fl.classList.contains('der') ? 1 : -1;
+  c.scrollTo({left: ((i + d + n) % n) * c.clientWidth, behavior: 'smooth'});
+}
+// scroll no burbujea: se escucha en captura para todos los carriles (tarjetas y detalle)
+document.addEventListener('scroll', e => { const c = e.target; if (c && c.classList && c.classList.contains('carril')) ponerPuntos(c); }, true);
+
 function pintarLista() {
   const ok = (campo) => p => filtro[campo] === 'Todos' || filtro[campo] === 'Todas' || p[campo] === filtro[campo];
   const lista = catalogo.filter(p => p.categoria === filtro.categoria).filter(ok('proveedor')).filter(ok('tueste')).filter(ok('presentacion')).filter(ok('tamano')).filter(ok('origen'))
@@ -579,7 +613,7 @@ function pintarLista() {
     const badge = !p.hay ? '<span class="badge agotado">Agotado</span>' : p.ultimas ? '<span class="badge ultimas">Últimas piezas</span>' : '';
     const foto = fotoProducto(p), n = tituloDe(p), sabor = SABOR[p.tueste];
     return `<article class="card">
-      <div class="foto${foto ? ' esperando' : ''}" data-ver="${esc(p.sku)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(n)}"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(n)}</div></div>${foto ? `<img loading="lazy" src="${esc(foto)}" alt="${esc(nombreLargo(p))}" onload="this.parentNode.classList.remove('esperando');this.parentNode.classList.add('lista')" onerror="if(this.dataset.alt!=='1'&&'${esc(p.imagen || '')}'){this.dataset.alt='1';this.src='${esc(p.imagen || '')}'}else{this.parentNode.classList.remove('esperando');this.remove()}">` : ''}${badge}<span class="lupa" aria-hidden="true">Ver más</span></div>
+      <div class="foto${foto ? ' esperando' : ''}" data-ver="${esc(p.sku)}" role="button" tabindex="0" aria-label="Ver detalles de ${esc(n)}"><div class="sin"><div><img class="sello" src="logo.webp" alt=""><br>${esc(n)}</div></div>${foto ? `<div class="carril"><img loading="lazy" src="${esc(foto)}" alt="${esc(nombreLargo(p))}" onload="this.closest('.foto').classList.remove('esperando');this.closest('.foto').classList.add('lista')" onerror="if(this.dataset.alt!=='1'&&'${esc(p.imagen || '')}'){this.dataset.alt='1';this.src='${esc(p.imagen || '')}'}else{this.closest('.foto').classList.remove('esperando');this.remove()}">${fotoSabor(p) ? `<img class="sabor" loading="lazy" src="${esc(fotoSabor(p))}" alt="Perfil en taza: ${esc(nombreLargo(p))}">` : ''}</div>${fotoSabor(p) ? controlesCarril(2) : ''}` : ''}${badge}<span class="lupa" aria-hidden="true">Ver más</span></div>
       <div class="info">
         <h3 data-ver="${esc(p.sku)}">${tituloHtml(p)}</h3>
         ${sabor ? `<span class="sabor ${sabor === 'Suave' ? 'suave' : 'intenso'}">${sabor}</span>` : p.tamano && p.categoria === 'Bombones' ? `<span class="sabor">${esc(p.tamano)}</span>` : ''}
@@ -589,7 +623,8 @@ function pintarLista() {
   }).join('');
 }
 $('#lista').addEventListener('click', e => {
-  const v = e.target.closest('[data-ver]'); if (v) { abrirFicha(v.dataset.ver, v); return; }
+  const fl = e.target.closest('.flecha'); if (fl) { e.stopPropagation(); moverCarril(fl); return; }
+  const v = e.target.closest('[data-ver]'); if (v) { const c = v.querySelector('.carril'); abrirFicha(v.dataset.ver, v, c ? indiceCarril(c) : 0); return; }
   const b = e.target.closest('.agregar'); if (!b || b.disabled) return;
   cambiar(b.dataset.sku, +1);
   b.textContent = `En carrito (${carrito[b.dataset.sku]})`;
@@ -717,7 +752,7 @@ function atributos(p) {
 }
 
 let fichaSku = null, fichaOrigen = null;
-function abrirFicha(sku, origen) {
+function abrirFicha(sku, origen, fotoInicial) {
   const p = catalogo.find(x => x.sku === sku); if (!p) return;
   fichaSku = sku; fichaOrigen = origen || null;
   const cafe = p.categoria !== 'Bombones';
@@ -727,9 +762,8 @@ function abrirFicha(sku, origen) {
   const dudas = `${whatsapp}${whatsapp.indexOf('?') < 0 ? '?' : '&'}text=${encodeURIComponent('Hola, tengo una duda sobre ' + nombreCorto(p))}`;
   $('#ficha').innerHTML = `<button class="ficha-cerrar" id="ficha-cerrar" aria-label="Cerrar">×</button>
     <div class="ficha-foto">
-      <div class="zoom" id="zoom">${fotoProducto(p) ? `<img id="zoom-img" src="${esc(fotoProducto(p))}" alt="${esc(nombreCorto(p))}" draggable="false">` : `<div class="sin">${esc(titulo)}</div>`}</div>
-      ${fotoSabor(p) ? `<div class="miniaturas"><button class="mini-foto activa" data-src="${esc(fotoProducto(p))}"><img src="${esc(fotoProducto(p))}" alt="">Producto</button><button class="mini-foto" data-src="${esc(fotoSabor(p))}"><img src="${esc(fotoSabor(p))}" alt="" loading="lazy">Perfil en taza</button></div>` : ''}
-      ${fotoProducto(p) ? `<div class="zoom-ctl"><span id="zoom-ayuda">Toca la foto para acercar.</span><button id="zoom-btn" aria-pressed="false">Acercar +</button></div>` : ''}
+      <div class="zoom" id="zoom">${fotoProducto(p) ? `<div class="carril"><img src="${esc(fotoProducto(p))}" alt="${esc(nombreCorto(p))}" draggable="false">${fotoSabor(p) ? `<img class="sabor" src="${esc(fotoSabor(p))}" alt="Perfil en taza: ${esc(nombreCorto(p))}" draggable="false">` : ''}</div>${fotoSabor(p) ? controlesCarril(2) : ''}` : `<div class="sin">${esc(titulo)}</div>`}</div>
+      ${fotoProducto(p) ? `<div class="zoom-ctl"><span id="zoom-ayuda">${fotoSabor(p) ? 'Desliza para ver el perfil en taza · toca para acercar.' : 'Toca la foto para acercar.'}</span><button id="zoom-btn" aria-pressed="false">Acercar +</button></div>` : ''}
     </div>
     <div class="ficha-info">
       <div class="meta">${esc([p.proveedor, p.origen].filter(Boolean).join(' · '))}</div>
@@ -752,6 +786,8 @@ function abrirFicha(sku, origen) {
   document.body.style.overflow = 'hidden';
   $('#ficha').scrollTop = 0; $('#ficha').focus();
   prepararZoom();
+  const c = $('#zoom .carril');
+  if (c && fotoInicial) { c.scrollLeft = fotoInicial * c.clientWidth; ponerPuntos(c); }
 }
 function cerrarFicha(sinHistorial) {
   if (!fichaSku) return;
@@ -764,17 +800,15 @@ function cerrarFicha(sinHistorial) {
   if (fichaOrigen && document.body.contains(fichaOrigen)) fichaOrigen.focus();
 }
 function prepararZoom() {
-  const z = $('#zoom'), img = z && z.querySelector('img'), btn = $('#zoom-btn');
-  document.querySelectorAll('.mini-foto').forEach(b => b.onclick = () => {
-    document.querySelectorAll('.mini-foto').forEach(x => x.classList.toggle('activa', x === b));
-    if (img) { z.classList.remove('activo'); img.style.transformOrigin = '50% 50%'; img.src = b.dataset.src; if (btn) { btn.textContent = 'Acercar +'; btn.setAttribute('aria-pressed', false); } }
-  });
-  if (!img) return;
+  const z = $('#zoom'), c = z && z.querySelector('.carril'), btn = $('#zoom-btn');
+  if (!c) return;
+  const img = () => c.children[indiceCarril(c)] || c.children[0];   // la foto que se está viendo
   const punto = (e) => { const r = z.getBoundingClientRect();
     const x = Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)), y = Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100));
-    img.style.transformOrigin = `${x}% ${y}%`; };
+    img().style.transformOrigin = `${x}% ${y}%`; };
   const poner = (on, e) => { z.classList.toggle('activo', on); if (btn) { btn.textContent = on ? 'Alejar −' : 'Acercar +'; btn.setAttribute('aria-pressed', on); }
-    if (on && e) punto(e); if (!on) img.style.transformOrigin = '50% 50%'; };
+    [...c.children].forEach(i => { if (!on || i !== img()) i.style.transformOrigin = '50% 50%'; });
+    if (on && e) punto(e); };
   let arrastre = false, movido = false;
   z.addEventListener('pointerdown', e => { arrastre = true; movido = false; });
   z.addEventListener('pointermove', e => {
@@ -782,7 +816,10 @@ function prepararZoom() {
     if (e.pointerType === 'mouse' || arrastre) { movido = true; punto(e); }
   });
   z.addEventListener('pointerup', e => { arrastre = false; });
-  z.addEventListener('click', e => { if (z.classList.contains('activo') && movido && e.pointerType !== 'mouse') return; poner(!z.classList.contains('activo'), e); });
+  z.addEventListener('click', e => {
+    const fl = e.target.closest('.flecha'); if (fl) { moverCarril(fl); return; }
+    if (z.classList.contains('activo') && movido && e.pointerType !== 'mouse') return;
+    poner(!z.classList.contains('activo'), e); });
   if (btn) btn.onclick = () => poner(!z.classList.contains('activo'));
 }
 $('#ficha-velo').addEventListener('click', e => {
