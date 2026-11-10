@@ -461,10 +461,23 @@ let catalogo = [];
 let whatsapp = 'https://wa.me/528115088658';
 let carrito = leer('cz_carrito', {});   // {sku: cantidad}
 let promoAuto = null;   // descuento automático vigente que manda la API: {codigo, promo, pct, minimo, aplica, hasta, tope}
-// Al abrir la tienda, el café se muestra en 250 g (el que más se vende y mejor margen); «Ver todos» quita el filtro.
-const TAMANO_INICIAL = '250 g';
-const filtro = {categoria: 'Café', proveedor: 'Todas', tueste: 'Todos', presentacion: 'Todos', tamano: TAMANO_INICIAL, origen: 'Todos'};
-const tamanoInicial = () => catalogo.some(p => p.categoria === 'Café' && p.tamano === TAMANO_INICIAL) ? TAMANO_INICIAL : 'Todos';
+// Al abrir la tienda, el café se muestra filtrado en el tamaño con más inventario publicado.
+// La API manda «tamanoInicial» (suma de lo disponible por tamaño en la pestaña Tienda). Si no viene,
+// se estima con lo que hay: cada producto con existencias cuenta 3 y uno en «últimas piezas» cuenta 1.
+// En empate gana el tamaño más chico. «Ver todos» quita el filtro.
+const TAMANO_RESPALDO = '250 g';
+let tamanoApi = '';
+const filtro = {categoria: 'Café', proveedor: 'Todas', tueste: 'Todos', presentacion: 'Todos', tamano: TAMANO_RESPALDO, origen: 'Todos'};
+let tamanoAuto = true;   // true mientras el cliente no elija un tamaño
+function tamanoInicial() {
+  const cafe = catalogo.filter(p => p.categoria === 'Café');
+  if (!cafe.length) return 'Todos';
+  if (tamanoApi && cafe.some(p => p.tamano === tamanoApi && p.hay)) return tamanoApi;
+  const peso = {};
+  cafe.forEach(p => { peso[p.tamano] = (peso[p.tamano] || 0) + (p.hay ? (p.ultimas ? 1 : 3) : 0); });
+  const orden = Object.keys(peso).sort((a, b) => (peso[b] - peso[a]) || (gramos(a) - gramos(b)));
+  return orden.length && peso[orden[0]] > 0 ? orden[0] : 'Todos';
+}
 if (!MODO_DEV) $('#aviso-dev').remove();
 
 /* ===== Logo de temporada ===== */
@@ -522,7 +535,8 @@ function usarCatalogo(d) {
   // Quita del carrito lo que ya no existe
   Object.keys(carrito).forEach(s => { if (!catalogo.find(p => p.sku === s)) delete carrito[s]; });
   guardar('cz_carrito', carrito);
-  if (filtro.tamano === TAMANO_INICIAL && filtro.categoria === 'Café') filtro.tamano = tamanoInicial();   // si no hay 250 g, se ven todos
+  tamanoApi = typeof d.tamanoInicial === 'string' ? d.tamanoInicial : '';
+  if (tamanoAuto && filtro.categoria === 'Café') filtro.tamano = tamanoInicial();   // tamaño con más inventario; si no hay café, se ven todos
   pintarFiltros(); pintarLista(); pintarContador();
   abrirEnlaceProducto();
 }
@@ -581,15 +595,17 @@ function pintarFiltros() {
       ${activos ? '<button class="limpiar" id="limpiar">Ver todos</button>' : ''}</div>` : '');
 }
 $('#filtros').addEventListener('click', e => {
-  if (e.target.id === 'limpiar') { Object.assign(filtro, SIN_FILTRO); pintarFiltros(); pintarLista(); return; }
+  if (e.target.id === 'limpiar') { tamanoAuto = false; Object.assign(filtro, SIN_FILTRO); pintarFiltros(); pintarLista(); return; }
   const b = e.target.closest('.chip'); if (!b) return;
   filtro[b.dataset.campo] = b.dataset.valor;
+  if (b.dataset.campo === 'tamano') tamanoAuto = false;
   if (b.dataset.campo === 'categoria') { Object.assign(filtro, SIN_FILTRO); if (b.dataset.valor === 'Café') filtro.tamano = tamanoInicial(); }
   pintarFiltros(); pintarLista();
 });
 $('#filtros').addEventListener('change', e => {
   const s = e.target.closest('select[data-campo]'); if (!s) return;
   filtro[s.dataset.campo] = s.value;
+  if (s.dataset.campo === 'tamano') tamanoAuto = false;
   pintarFiltros(); pintarLista();
 });
 
